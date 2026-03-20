@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROK AI — Creator Studio v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@100;300;400;600;700;900&family=Share+Tech+Mono&family=Michroma&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#03040a;--surface:#080c18;--panel:#0c1220;--card:#0f1628;--card2:#111a2e;
+  --border:#1a2440;--border2:#243258;
+  --gold:#f0b429;--gold2:#ffcd5e;--gold-d:rgba(240,180,41,0.09);--gold-g:rgba(240,180,41,0.28);
+  --blue:#3b82f6;--blue2:#60a5fa;--blue-d:rgba(59,130,246,0.1);
+  --cyan:#06b6d4;--cyan-d:rgba(6,182,212,0.08);
+  --rose:#f43f5e;--rose-d:rgba(244,63,94,0.08);
+  --emerald:#10b981;--em-d:rgba(16,185,129,0.08);
+  --violet:#7c3aed;--violet2:#a78bfa;--violet-d:rgba(124,58,237,0.1);
+  --amber:#f59e0b;
+  --text:#dde4f5;--text2:#8899bb;--text3:#4a5880;
+  --free:#10b981;--pro:#f0b429;--elite:#a78bfa;
+}
+[data-theme="light"]{
+  --bg:#eef2ff;--surface:#fff;--panel:#f5f7ff;--card:#fff;--card2:#f0f4ff;
+  --border:#dde3f0;--border2:#c8d0e8;--text:#1a2340;--text2:#4a5880;--text3:#8899bb;
+}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--text);display:flex;height:100vh;transition:background .22s,color .22s;}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#040d1e,#02040a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .8s,transform .8s;}
+#splash.gone{opacity:0;transform:scale(1.04);pointer-events:none;}
+.sp-logo{width:88px;height:88px;border-radius:22px;background:linear-gradient(135deg,#1e3a8a,#3b82f6,#f0b429);display:flex;align-items:center;justify-content:center;font-family:'Michroma',monospace;font-size:22px;color:#fff;box-shadow:0 0 60px rgba(59,130,246,.5),0 0 120px rgba(240,180,41,.2);animation:spP 1.5s ease-in-out infinite alternate;}
+@keyframes spP{from{box-shadow:0 0 60px rgba(59,130,246,.5),0 0 120px rgba(240,180,41,.2);}to{box-shadow:0 0 90px rgba(59,130,246,.75),0 0 160px rgba(240,180,41,.35);}}
+.sp-title{font-family:'Michroma',monospace;font-size:36px;letter-spacing:.14em;background:linear-gradient(135deg,#fff,#ffcd5e,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sp-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a5880;letter-spacing:.1em;}
+.sp-bar{width:240px;height:3px;background:#1a2440;border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:2px;background-size:200%;animation:sfill 2.2s ease forwards,shim 1.5s linear infinite;}
+@keyframes sfill{from{width:0}to{width:100%}}
+@keyframes shim{0%{background-position:0%}100%{background-position:200%}}
+.sp-pct{font-family:'Share Tech Mono',monospace;font-size:11px;color:#3b82f6;letter-spacing:.06em;}
+
+/* ── BG FX ── */
+.gbg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(59,130,246,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.025) 1px,transparent 1px);background-size:52px 52px;animation:gd 50s linear infinite;}
+@keyframes gd{from{background-position:0 0}to{background-position:52px 52px}}
+[data-theme="light"] .gbg{background-image:linear-gradient(rgba(59,130,246,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.06) 1px,transparent 1px);}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);}
+.ob1{width:550px;height:550px;top:-20%;left:-10%;background:radial-gradient(circle,rgba(59,130,246,.055),transparent 70%);animation:of1 20s ease-in-out infinite alternate;}
+.ob2{width:450px;height:450px;bottom:-20%;right:-10%;background:radial-gradient(circle,rgba(124,58,237,.065),transparent 70%);animation:of2 24s ease-in-out infinite alternate;}
+.ob3{width:300px;height:300px;top:35%;left:44%;background:radial-gradient(circle,rgba(240,180,41,.04),transparent 70%);animation:of3 16s ease-in-out infinite alternate;}
+@keyframes of1{from{transform:translate(0,0)}to{transform:translate(70px,50px)}}
+@keyframes of2{from{transform:translate(0,0)}to{transform:translate(-60px,-70px)}}
+@keyframes of3{from{transform:translate(0,0)}to{transform:translate(40px,-50px)}}
+.scanl{position:fixed;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.12),rgba(240,180,41,.18),rgba(59,130,246,.12),transparent);animation:scl 10s linear infinite;pointer-events:none;z-index:1;}
+@keyframes scl{0%{top:-1px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100vh;opacity:0}}
+
+/* ── NOTIFICATIONS ── */
+#nContainer{position:fixed;top:14px;right:14px;z-index:9998;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.notif{background:var(--card);border-radius:12px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;min-width:270px;max-width:320px;box-shadow:0 12px 40px rgba(0,0,0,.5);pointer-events:all;animation:nin .35s cubic-bezier(.34,1.56,.64,1) forwards;border-left:3px solid var(--blue);}
+.notif.ok{border-left-color:var(--emerald)}.notif.err{border-left-color:var(--rose)}.notif.warn{border-left-color:var(--amber)}
+.notif.out{animation:nout .3s ease forwards;}
+@keyframes nin{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes nout{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(60px)}}
+.ni{font-size:17px;flex-shrink:0;margin-top:1px;}.nb{flex:1;}
+.nt{font-family:'Michroma',monospace;font-size:10.5px;letter-spacing:.06em;margin-bottom:2px;}
+.notif.ok .nt{color:var(--emerald)}.notif.err .nt{color:var(--rose)}.notif.warn .nt{color:var(--amber)}.notif .nt{color:var(--blue2)}
+.nm{font-size:12px;color:var(--text2);line-height:1.4;}
+.nc{color:var(--text3);cursor:pointer;padding:1px 4px;font-size:13px;transition:color .15s;}.nc:hover{color:var(--text);}
+
+/* ── LOGIN ── */
+#loginWrap{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#020510,#04081a);display:none;align-items:center;justify-content:center;}
+#loginWrap.show{display:flex;}
+.lbox{background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:pfade .4s ease;position:relative;overflow:hidden;}
+.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--gold),var(--blue));}
+.llogo{text-align:center;margin-bottom:26px;}
+.llogo-n{font-family:'Michroma',monospace;font-size:26px;letter-spacing:.12em;background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.llogo-s{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.08em;margin-top:3px;}
+.ltabs{display:flex;gap:0;background:var(--surface);border-radius:9px;padding:3px;margin-bottom:20px;}
+.ltab{flex:1;padding:8px;text-align:center;border-radius:7px;cursor:pointer;font-family:'Michroma',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--text3);transition:all .2s;}
+.ltab.on{background:var(--gold-d);color:var(--gold);border:1px solid rgba(240,180,41,.25);}
+.lf{margin-bottom:13px;}
+.lf label{display:block;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--text3);margin-bottom:5px;text-transform:uppercase;}
+.lf input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:9px;padding:11px 14px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;outline:none;transition:all .2s;}
+.lf input:focus{border-color:rgba(240,180,41,.4);box-shadow:0 0 0 3px rgba(240,180,41,.06);}
+.lbtn{width:100%;padding:12px;border-radius:9px;border:none;background:linear-gradient(135deg,#a07010,#c89010,var(--gold));color:#000;font-family:'Michroma',monospace;font-size:10.5px;letter-spacing:.1em;cursor:pointer;transition:all .2s;margin-top:3px;}
+.lbtn:hover{box-shadow:0 6px 28px rgba(240,180,41,.4);}
+.ldiv{text-align:center;color:var(--text3);font-size:11px;margin:12px 0;font-family:'Share Tech Mono',monospace;}
+.lguest{width:100%;padding:10px;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'Michroma',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.lguest:hover{border-color:var(--blue);color:var(--blue2);}
+
+/* ── PLAN MODAL ── */
+#planModal{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
+#planModal.show{display:flex;}
+.pm-box{background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:36px;width:100%;max-width:680px;animation:pfade .3s ease;}
+.pm-title{font-family:'Michroma',monospace;font-size:16px;letter-spacing:.1em;color:var(--gold);margin-bottom:26px;text-align:center;}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.plan-card{border-radius:16px;padding:22px 18px;border:1px solid var(--border);position:relative;overflow:hidden;cursor:pointer;transition:all .25s;}
+.plan-card:hover{transform:translateY(-4px);}
+.plan-card.free{border-color:rgba(16,185,129,.3);background:linear-gradient(135deg,#061a10,#0a2218);}
+.plan-card.pro{border-color:rgba(240,180,41,.4);background:linear-gradient(135deg,#1a1200,#281a00);box-shadow:0 0 40px rgba(240,180,41,.08);}
+.plan-card.elite{border-color:rgba(167,139,250,.3);background:linear-gradient(135deg,#0e0818,#160c24);}
+.plan-card.pro::before{content:'POPULAR';position:absolute;top:12px;right:12px;font-family:'Share Tech Mono',monospace;font-size:9px;background:var(--gold-d);color:var(--gold);border:1px solid rgba(240,180,41,.3);padding:2px 8px;border-radius:4px;letter-spacing:.05em;}
+.plan-name{font-family:'Michroma',monospace;font-size:13px;letter-spacing:.08em;margin-bottom:6px;}
+.plan-card.free .plan-name{color:var(--free)}.plan-card.pro .plan-name{color:var(--pro)}.plan-card.elite .plan-name{color:var(--elite)}
+.plan-price{font-family:'Michroma',monospace;font-size:24px;margin-bottom:14px;}
+.plan-card.free .plan-price{color:#fff}.plan-card.pro .plan-price{color:var(--gold)}.plan-card.elite .plan-price{color:var(--violet2)}
+.plan-feat{font-size:12px;color:var(--text2);line-height:1.9;}
+.plan-feat span{display:block;}
+.plan-feat span::before{content:'✓ ';color:var(--emerald);}
+.plan-btn{width:100%;padding:10px;border-radius:8px;border:none;font-family:'Michroma',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;margin-top:14px;transition:all .2s;}
+.plan-card.free .plan-btn{background:var(--em-d);color:var(--emerald);border:1px solid rgba(16,185,129,.3);}
+.plan-card.pro .plan-btn{background:linear-gradient(135deg,#a07010,var(--gold));color:#000;}
+.plan-card.elite .plan-btn{background:linear-gradient(135deg,#5b21b6,var(--violet2));color:#fff;}
+
+/* ── KB MODAL ── */
+#kbModal{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
+#kbModal.show{display:flex;}
+.kb-box{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:28px;width:100%;max-width:480px;animation:pfade .3s ease;}
+.kb-title{font-family:'Michroma',monospace;font-size:13px;letter-spacing:.1em;color:var(--gold);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;}
+.kb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.kbr{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
+.kbr span{font-size:12px;color:var(--text2);}
+kbd{background:var(--panel);border:1px solid var(--border2);border-radius:5px;padding:2px 6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);}
+
+/* ── SHARE MODAL ── */
+#shareModal{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
+#shareModal.show{display:flex;}
+.share-box{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:28px;width:100%;max-width:420px;animation:pfade .3s ease;}
+.share-title{font-family:'Michroma',monospace;font-size:13px;color:var(--gold);letter-spacing:.1em;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
+.share-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.share-btn{border-radius:12px;padding:16px 10px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;text-align:center;transition:all .22s;font-family:'Michroma',monospace;font-size:10px;letter-spacing:.06em;}
+.share-btn:hover{transform:translateY(-2px);}
+.share-btn.fb{border-color:rgba(59,89,152,.4);color:#4267B2;}.share-btn.fb:hover{background:rgba(59,89,152,.1);}
+.share-btn.yt{border-color:rgba(255,0,0,.4);color:#FF0000;}.share-btn.yt:hover{background:rgba(255,0,0,.08);}
+.share-btn.tt{border-color:rgba(0,0,0,.4);color:#fff;}.share-btn.tt:hover{background:rgba(255,255,255,.06);}
+.share-btn.ig{border-color:rgba(225,48,108,.4);color:#E1306C;}.share-btn.ig:hover{background:rgba(225,48,108,.08);}
+.share-btn.tw{border-color:rgba(29,161,242,.4);color:#1DA1F2;}.share-btn.tw:hover{background:rgba(29,161,242,.08);}
+.share-btn.lk{border-color:rgba(0,119,181,.4);color:#0077B5;}.share-btn.lk:hover{background:rgba(0,119,181,.08);}
+.share-icon{font-size:26px;display:block;margin-bottom:6px;}
+.share-link{display:flex;gap:8px;align-items:center;}
+.share-link input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;}
+.share-copy{padding:9px 14px;border-radius:8px;border:none;background:var(--gold-d);color:var(--gold);border:1px solid rgba(240,180,41,.3);font-family:'Michroma',monospace;font-size:10px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.share-copy:hover{background:var(--gold);color:#000;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:68px;flex-shrink:0;background:linear-gradient(180deg,#060a18,#07101e);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0 16px;gap:3px;z-index:10;position:relative;}
+.sidebar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(240,180,41,.4),transparent);opacity:.3;}
+[data-theme="light"] .sidebar{background:linear-gradient(180deg,#e0e8ff,#d8e2f8);}
+.rok-m{width:44px;height:44px;border-radius:13px;margin-bottom:12px;background:linear-gradient(135deg,#1e3a8a,#3b82f6,var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Michroma',monospace;font-size:13px;color:#fff;box-shadow:0 0 26px rgba(59,130,246,.4),0 0 52px rgba(240,180,41,.15);animation:lp 4s ease-in-out infinite;cursor:pointer;}
+@keyframes lp{0%,100%{box-shadow:0 0 26px rgba(59,130,246,.4),0 0 52px rgba(240,180,41,.15)}50%{box-shadow:0 0 40px rgba(59,130,246,.65),0 0 78px rgba(240,180,41,.28)}}
+.nb{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .22s;position:relative;border:1px solid transparent;}
+.nb:hover{background:var(--blue-d);border-color:rgba(59,130,246,.2);}
+.nb.on{background:var(--gold-d);border-color:rgba(240,180,41,.3);}
+.nb .tip{position:absolute;left:55px;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:5px 11px;border-radius:7px;font-size:11.5px;font-family:'Share Tech Mono',monospace;letter-spacing:.05em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:200;}
+.nb:hover .tip{opacity:1;}
+.nsep{width:32px;height:1px;background:var(--border);margin:5px 0;}
+.su{margin-top:auto;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;font-family:'Michroma',monospace;font-size:11px;color:#fff;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative;}
+.su:hover{border-color:var(--gold);box-shadow:0 0 14px var(--gold-g);}
+.su .tip{bottom:auto;top:50%;transform:translateY(-50%);}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1;}
+
+/* ── TOPBAR ── */
+.topbar{height:56px;flex-shrink:0;background:rgba(3,4,10,.92);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;backdrop-filter:blur(20px);position:relative;}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--blue),var(--gold),transparent);opacity:.35;}
+[data-theme="light"] .topbar{background:rgba(238,242,255,.95);}
+.tbl{display:flex;align-items:center;gap:12px;}
+.tbbrand{font-family:'Michroma',monospace;font-size:15px;letter-spacing:.1em;color:var(--gold);cursor:pointer;}
+.tbsep{color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:13px;}
+.tbpage{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:.08em;}
+.tbr{display:flex;align-items:center;gap:7px;}
+.pill{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 11px;border-radius:7px;letter-spacing:.05em;}
+.pg{background:var(--gold-d);border:1px solid rgba(240,180,41,.2);color:var(--gold);}
+.pe{background:var(--em-d);border:1px solid rgba(16,185,129,.2);color:var(--emerald);}
+.dp{width:7px;height:7px;border-radius:50%;background:var(--emerald);animation:dpuls 2s ease-in-out infinite;}
+@keyframes dpuls{0%,100%{opacity:1;box-shadow:0 0 6px var(--emerald)}50%{opacity:.4;box-shadow:none}}
+.ibt{width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:15px;}
+.ibt:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+.lsel{background:var(--panel);border:1px solid var(--border2);color:var(--text);padding:4px 22px 4px 9px;border-radius:7px;font-family:'Share Tech Mono',monospace;font-size:10px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a5880'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;}
+.lsel option{background:#0c1220;}
+.tbu{display:flex;align-items:center;gap:7px;cursor:pointer;padding:4px 9px;border-radius:7px;border:1px solid var(--border);transition:all .2s;}
+.tbu:hover{border-color:var(--gold);background:var(--gold-d);}
+.tbav{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-family:'Michroma',monospace;}
+.tbun{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);}
+/* plan badge */
+.plan-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 7px;border-radius:4px;letter-spacing:.04em;}
+.pb-free{background:var(--em-d);color:var(--emerald);border:1px solid rgba(16,185,129,.25);}
+.pb-pro{background:var(--gold-d);color:var(--gold);border:1px solid rgba(240,180,41,.3);}
+.pb-elite{background:var(--violet-d);color:var(--violet2);border:1px solid rgba(167,139,250,.3);}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:20px;scroll-behavior:smooth;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.page{display:none;animation:pfade .3s ease;}
+.page.active{display:block;}
+@keyframes pfade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sttl{font-family:'Michroma',monospace;font-size:10px;letter-spacing:.14em;color:var(--text3);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.sttl span{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);}
+
+/* ── ANALYTICS ── */
+.analytics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px;}
+.an-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden;transition:all .25s;}
+.an-card:hover{transform:translateY(-3px);border-color:var(--border2);}
+.an-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;}
+.an-card.a1::before{background:linear-gradient(90deg,var(--blue),var(--cyan));}
+.an-card.a2::before{background:linear-gradient(90deg,var(--violet),var(--violet2));}
+.an-card.a3::before{background:linear-gradient(90deg,var(--gold),var(--amber));}
+.an-card.a4::before{background:linear-gradient(90deg,var(--emerald),var(--cyan));}
+.an-card.a5::before{background:linear-gradient(90deg,var(--rose),var(--amber));}
+.an-n{font-family:'Michroma',monospace;font-size:28px;margin-bottom:4px;}
+.an-card.a1 .an-n{color:var(--blue2)}.an-card.a2 .an-n{color:var(--violet2)}.an-card.a3 .an-n{color:var(--gold2)}.an-card.a4 .an-n{color:var(--emerald)}.an-card.a5 .an-n{color:var(--rose)}
+.an-l{font-size:11px;color:var(--text2);font-family:'Share Tech Mono',monospace;letter-spacing:.04em;}
+.an-trend{position:absolute;top:14px;right:14px;font-family:'Share Tech Mono',monospace;font-size:10px;padding:2px 7px;border-radius:5px;}
+.up{background:var(--em-d);color:var(--emerald);}.dn{background:var(--rose-d);color:var(--rose);}
+
+/* Chart area */
+.chart-wrap{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:20px;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;}
+.chart-title{font-family:'Michroma',monospace;font-size:11px;letter-spacing:.08em;color:var(--text2);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;}
+.bar-fill{width:100%;border-radius:4px 4px 0 0;transition:height .5s ease;min-height:4px;}
+.bar-fill.bv{background:linear-gradient(180deg,var(--blue2),var(--blue));}
+.bar-fill.bg{background:linear-gradient(180deg,var(--gold2),var(--gold));}
+.bar-fill.be{background:linear-gradient(180deg,var(--emerald),#059669);}
+.bar-fill.bvo{background:linear-gradient(180deg,var(--violet2),var(--violet));}
+.bar-fill.br{background:linear-gradient(180deg,#fb7185,var(--rose));}
+.bar-fill.bc{background:linear-gradient(180deg,var(--cyan),#0891b2);}
+.bar-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.04em;}
+.donut-wrap{position:relative;display:flex;align-items:center;justify-content:center;margin:8px 0;}
+.donut-legend{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.dl-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dl-val{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);}
+
+/* ── HOME ── */
+.hero{background:linear-gradient(135deg,#050d20,#08122a,#060e1e);border:1px solid var(--border2);border-radius:18px;padding:32px 36px;margin-bottom:20px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 75% 50%,rgba(240,180,41,.055) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(59,130,246,.07) 0%,transparent 50%);}
+.hero::after{content:'ROK';position:absolute;right:-14px;top:50%;transform:translateY(-50%);font-family:'Michroma',monospace;font-size:108px;color:rgba(255,255,255,.013);letter-spacing:.12em;pointer-events:none;}
+[data-theme="light"] .hero{background:linear-gradient(135deg,#dde5ff,#e8eeff,#d8e2ff);}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:var(--gold);padding:4px 13px;border-radius:20px;font-family:'Share Tech Mono',monospace;font-size:10.5px;letter-spacing:.06em;margin-bottom:13px;}
+.hero-title{font-family:'Michroma',monospace;font-size:28px;letter-spacing:.05em;line-height:1.22;margin-bottom:9px;background:linear-gradient(135deg,#fff,var(--gold2),var(--blue2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1;}
+[data-theme="light"] .hero-title{background:linear-gradient(135deg,#1a2340,var(--gold),var(--blue));-webkit-background-clip:text;background-clip:text;}
+.hero-sub{font-size:13px;color:var(--text2);max-width:480px;line-height:1.7;margin-bottom:20px;position:relative;z-index:1;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:7px;position:relative;z-index:1;}
+.hchip{background:var(--card);border:1px solid var(--border2);color:var(--text2);padding:5px 13px;border-radius:7px;font-size:12px;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;cursor:pointer;transition:all .2s;}
+.hchip:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+
+/* tools grid */
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 16px;cursor:pointer;transition:all .28s;position:relative;overflow:hidden;}
+.tcard::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .28s;border-radius:16px;}
+.tcard:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.45);}
+.tcard:hover::before{opacity:1;}
+.cg::before{background:radial-gradient(ellipse at top left,rgba(240,180,41,.07),transparent 70%)}
+.cb::before{background:radial-gradient(ellipse at top left,rgba(59,130,246,.07),transparent 70%)}
+.cv::before{background:radial-gradient(ellipse at top left,rgba(124,58,237,.07),transparent 70%)}
+.cr2::before{background:radial-gradient(ellipse at top left,rgba(244,63,94,.07),transparent 70%)}
+.ce::before{background:radial-gradient(ellipse at top left,rgba(16,185,129,.07),transparent 70%)}
+.cc::before{background:radial-gradient(ellipse at top left,rgba(6,182,212,.07),transparent 70%)}
+.cp2::before{background:radial-gradient(ellipse at top left,rgba(249,115,22,.07),transparent 70%)}
+.cteal::before{background:radial-gradient(ellipse at top left,rgba(20,184,166,.07),transparent 70%)}
+.tcard:hover.cg{border-color:rgba(240,180,41,.35)}.tcard:hover.cb{border-color:rgba(59,130,246,.35)}.tcard:hover.cv{border-color:rgba(124,58,237,.35)}.tcard:hover.cr2{border-color:rgba(244,63,94,.35)}.tcard:hover.ce{border-color:rgba(16,185,129,.35)}.tcard:hover.cc{border-color:rgba(6,182,212,.35)}.tcard:hover.cp2{border-color:rgba(249,115,22,.35)}.tcard:hover.cteal{border-color:rgba(20,184,166,.35)}
+.tico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:11px;}
+.cg .tico{background:rgba(240,180,41,.1)}.cb .tico{background:var(--blue-d)}.cv .tico{background:var(--violet-d)}.cr2 .tico{background:var(--rose-d)}.ce .tico{background:var(--em-d)}.cc .tico{background:var(--cyan-d)}.cp2 .tico{background:rgba(249,115,22,.1)}.cteal .tico{background:rgba(20,184,166,.08)}
+.tname{font-family:'Michroma',monospace;font-size:10.5px;letter-spacing:.06em;margin-bottom:5px;}
+.cg .tname{color:var(--gold)}.cb .tname{color:var(--blue2)}.cv .tname{color:var(--violet2)}.cr2 .tname{color:var(--rose)}.ce .tname{color:var(--emerald)}.cc .tname{color:var(--cyan)}.cp2 .tname{color:#fb923c}.cteal .tname{color:#2dd4bf}
+.tdesc{font-size:11.5px;color:var(--text2);line-height:1.5;}
+.tbadge{position:absolute;top:12px;right:12px;font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 7px;border-radius:4px;letter-spacing:.04em;}
+.bai{background:var(--blue-d);color:var(--blue2);border:1px solid rgba(59,130,246,.2);}
+.bnew{background:var(--rose-d);color:var(--rose);border:1px solid rgba(244,63,94,.2);}
+.bpro{background:var(--gold-d);color:var(--gold);border:1px solid rgba(240,180,41,.2);}
+
+/* ── HISTORY ── */
+.hist-list{display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto;}
+.hist-list::-webkit-scrollbar{width:3px;}.hist-list::-webkit-scrollbar-thumb{background:var(--border2);}
+.hi{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:all .2s;cursor:pointer;}
+.hi:hover{border-color:var(--gold);background:var(--gold-d);}
+.hil{display:flex;align-items:center;gap:9px;}
+.hiico{font-size:17px;flex-shrink:0;}
+.hiinfo strong{display:block;font-size:12.5px;color:var(--text);}
+.hiinfo span{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.04em;}
+.hir{display:flex;align-items:center;gap:6px;}
+.hdel{color:var(--text3);font-size:13px;cursor:pointer;padding:2px 5px;border-radius:4px;transition:all .15s;}
+.hdel:hover{color:var(--rose);background:var(--rose-d);}
+.hshare{color:var(--text3);font-size:13px;cursor:pointer;padding:2px 5px;border-radius:4px;transition:all .15s;}
+.hshare:hover{color:var(--blue2);background:var(--blue-d);}
+.hempty{text-align:center;padding:22px;color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.05em;}
+
+/* ── STUDIO ── */
+.studio{display:grid;grid-template-columns:1fr 290px;gap:15px;}
+.sleft{background:var(--card);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;}
+.shead{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,var(--card),var(--card2));}
+.shead h3{font-family:'Michroma',monospace;font-size:11.5px;letter-spacing:.08em;}
+.sbody{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;}
+.sright{display:flex;flex-direction:column;gap:12px;}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:16px;}
+.pttl{font-family:'Michroma',monospace;font-size:10px;letter-spacing:.1em;color:var(--text3);margin-bottom:12px;text-transform:uppercase;}
+
+/* form */
+label.lbl{display:block;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
+textarea,input[type="text"],select{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:9px;padding:10px 12px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;outline:none;resize:none;transition:all .2s;}
+textarea::placeholder,input::placeholder{color:var(--text3);}
+textarea:focus,input:focus,select:focus{border-color:rgba(240,180,41,.38);box-shadow:0 0 0 3px rgba(240,180,41,.06);}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a5880'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:26px;}
+select option{background:#0c1220;}[data-theme="light"] select option{background:#f0f4ff;color:#1a2340;}
+.fr{margin-bottom:12px;}
+input[type="range"]{width:100%;accent-color:var(--gold);cursor:pointer;background:none;border:none;padding:0;height:18px;}
+.rw{display:flex;align-items:center;gap:9px;}
+.rv{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--gold);min-width:34px;text-align:right;}
+.cr{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.chip{padding:4px 11px;border-radius:18px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--text2);background:var(--surface);transition:all .17s;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;}
+.chip:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+.chip.on{background:var(--gold-d);border-color:rgba(240,180,41,.4);color:var(--gold);}
+.chip.ob{background:var(--blue-d);border-color:rgba(59,130,246,.4);color:var(--blue2);}
+.chip.ov{background:var(--violet-d);border-color:rgba(124,58,237,.4);color:var(--violet2);}
+.chip.or{background:var(--rose-d);border-color:rgba(244,63,94,.4);color:var(--rose);}
+.chip.oe{background:var(--em-d);border-color:rgba(16,185,129,.4);color:var(--emerald);}
+
+/* buttons */
+.btn{width:100%;padding:11px 16px;border-radius:10px;border:none;font-family:'Michroma',monospace;font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.07);opacity:0;transition:opacity .2s;}
+.btn:hover::after{opacity:1}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.35;cursor:not-allowed;}
+.bgold{background:linear-gradient(135deg,#92600a,#c8880a,var(--gold));color:#000;box-shadow:0 4px 20px rgba(240,180,41,.26);}
+.bgold:hover:not(:disabled){box-shadow:0 6px 28px rgba(240,180,41,.46);}
+.bblue{background:linear-gradient(135deg,#1e3a8a,#2563eb,var(--blue));color:#fff;box-shadow:0 4px 20px rgba(59,130,246,.26);}
+.bvio{background:linear-gradient(135deg,#4c1d95,#6d28d9,var(--violet2));color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.26);}
+.brose{background:linear-gradient(135deg,#9f1239,#e11d48,var(--rose));color:#fff;box-shadow:0 4px 20px rgba(244,63,94,.26);}
+.bemer{background:linear-gradient(135deg,#064e3b,#059669,var(--emerald));color:#fff;box-shadow:0 4px 20px rgba(16,185,129,.26);}
+.bout{background:transparent;border:1px solid var(--border2);color:var(--text2);}
+.bout:hover{border-color:var(--gold);color:var(--gold);}
+.bsm{width:auto;padding:6px 12px;font-size:9px;}
+
+/* upload */
+.uz{border:2px dashed var(--border2);border-radius:13px;padding:26px 16px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.uz:hover,.uz.on{border-color:var(--gold);background:var(--gold-d);}
+.uz input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.uzi{font-size:36px;display:block;margin-bottom:9px;}
+.uzt{font-size:12.5px;color:var(--text2);line-height:1.65;}
+.uzt strong{color:var(--gold);display:block;font-family:'Michroma',monospace;font-size:13px;letter-spacing:.04em;margin-bottom:3px;}
+
+/* preview / video mock */
+.pvbox{background:var(--surface);border:1px solid var(--border);border-radius:11px;min-height:160px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.pvph{text-align:center;color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:12px;}
+.pvph em{font-size:32px;display:block;margin-bottom:8px;opacity:.22;font-style:normal;}
+#pvImg{max-width:100%;max-height:190px;border-radius:8px;display:none;}
+.vmock{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#040810,#070f1e,#050c16);border:1px solid var(--border2);border-radius:11px;display:none;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.vmock.show{display:flex;}
+.vgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.034) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.034) 1px,transparent 1px);background-size:36px 36px;}
+.vscn{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(240,180,41,.44),transparent);animation:scl 5s linear infinite;}
+.vc{position:absolute;width:16px;height:16px;border-color:var(--gold);border-style:solid;border-width:0;}
+.vc.tl{top:8px;left:8px;border-top-width:2px;border-left-width:2px;}
+.vc.tr{top:8px;right:8px;border-top-width:2px;border-right-width:2px;}
+.vc.bl{bottom:8px;left:8px;border-bottom-width:2px;border-left-width:2px;}
+.vc.br{bottom:8px;right:8px;border-bottom-width:2px;border-right-width:2px;}
+.vplay{width:58px;height:58px;border-radius:50%;background:rgba(240,180,41,.12);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;z-index:1;box-shadow:0 0 26px rgba(240,180,41,.2);}
+.vplay:hover{background:rgba(240,180,41,.22);transform:scale(1.08);}
+.vlbl{position:absolute;top:9px;left:9px;font-family:'Michroma',monospace;font-size:8.5px;color:var(--text3);letter-spacing:.08em;z-index:1;}
+.vdur{position:absolute;bottom:9px;right:9px;font-family:'Share Tech Mono',monospace;font-size:10.5px;color:var(--gold);z-index:1;}
+.vlive{position:absolute;top:9px;right:9px;display:flex;align-items:center;gap:4px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--rose);z-index:1;}
+.ldot{width:6px;height:6px;background:var(--rose);border-radius:50%;animation:dpuls 1s infinite;}
+
+/* waveform */
+.wf{display:none;align-items:center;justify-content:center;gap:3px;padding:13px;background:var(--surface);border:1px solid var(--border);border-radius:11px;height:70px;margin-top:10px;}
+.wf.show{display:flex;}
+.wb{width:4px;background:linear-gradient(180deg,var(--violet2),var(--blue));border-radius:2px;animation:wv 1s ease-in-out infinite;opacity:.85;}
+@keyframes wv{0%,100%{height:5px}50%{height:36px}}
+
+/* progress */
+.prg{display:none;margin-top:12px;}.prg.show{display:block;}
+.pi{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:10.5px;color:var(--text3);margin-bottom:6px;letter-spacing:.04em;}
+.pb{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.pf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--gold),var(--blue));background-size:200%;animation:shim 2s linear infinite;width:0%;transition:width .38s ease;box-shadow:0 0 10px rgba(240,180,41,.24);}
+
+/* output */
+.out{display:none;margin-top:13px;background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;}
+.out.show{display:block;}
+.oh{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-family:'Michroma',monospace;font-size:10px;letter-spacing:.08em;color:var(--emerald);}
+.ob{padding:13px;font-size:13px;line-height:1.75;color:var(--text);max-height:250px;overflow-y:auto;}
+.ob::-webkit-scrollbar{width:3px;}.ob::-webkit-scrollbar-thumb{background:var(--border2);}
+
+/* timeline */
+.tlw{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px;margin-top:11px;}
+.tll{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.08em;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.tlt{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;min-height:48px;}
+.tlt::-webkit-scrollbar{height:3px;}.tlt::-webkit-scrollbar-thumb{background:var(--border2);}
+.tf{width:58px;height:42px;border-radius:7px;flex-shrink:0;background:var(--card2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);cursor:grab;transition:all .18s;letter-spacing:.04em;user-select:none;}
+.tf:active{cursor:grabbing;transform:scale(1.06);z-index:10;}
+.tf:hover{border-color:var(--gold);color:var(--gold);}
+.tf.on{border-color:var(--gold);background:var(--gold-d);color:var(--gold);}
+.tf.dov{border-color:var(--blue);background:var(--blue-d);border-style:dashed;}
+.tfa{width:42px;height:42px;border-radius:7px;border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);font-size:18px;flex-shrink:0;transition:all .2s;}
+.tfa:hover{border-color:var(--gold);color:var(--gold);}
+
+/* video editor */
+.ve-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.ve-tool{padding:7px 13px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);font-family:'Michroma',monospace;font-size:9.5px;letter-spacing:.06em;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.ve-tool:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+.ve-tool.active{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+.ve-canvas{background:var(--surface);border:1px solid var(--border);border-radius:11px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:crosshair;}
+.ve-canvas-ph{text-align:center;color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:12px;}
+.ve-canvas-ph em{font-size:30px;display:block;margin-bottom:7px;font-style:normal;}
+.ve-filters{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px;}
+.ve-filter{aspect-ratio:1;border-radius:9px;background:var(--card2);border:1px solid var(--border);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);transition:all .2s;}
+.ve-filter:hover,.ve-filter.on{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+.ve-filter-icon{font-size:20px;}
+
+/* ── TEMPLATES ── */
+.tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+.tmpl-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative;}
+.tmpl-card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 14px 40px rgba(0,0,0,.4);}
+.tmpl-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;overflow:hidden;}
+.tmpl-thumb::after{content:'USE';position:absolute;inset:0;background:rgba(240,180,41,.15);display:flex;align-items:center;justify-content:center;font-family:'Michroma',monospace;font-size:14px;letter-spacing:.1em;color:var(--gold);opacity:0;transition:opacity .2s;}
+.tmpl-card:hover .tmpl-thumb::after{opacity:1;}
+.tmpl-info{padding:12px 14px;}
+.tmpl-name{font-family:'Michroma',monospace;font-size:11px;letter-spacing:.06em;color:var(--text);margin-bottom:3px;}
+.tmpl-cat{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.04em;}
+.tmpl-badge{position:absolute;top:8px;right:8px;font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 7px;border-radius:4px;letter-spacing:.04em;}
+
+/* ── FILE MANAGER ── */
+.fm-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+.fm-search{flex:1;min-width:160px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:8px 13px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:13px;outline:none;}
+.fm-search:focus{border-color:rgba(240,180,41,.38);}
+.fm-filter{display:flex;gap:5px;flex-wrap:wrap;}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.fm-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .22s;position:relative;}
+.fm-item:hover{transform:translateY(-3px);border-color:var(--border2);}
+.fm-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;}
+.fm-info{padding:9px 11px;}
+.fm-name{font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
+.fm-meta{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--text3);letter-spacing:.04em;}
+.fm-actions{position:absolute;top:6px;right:6px;display:flex;gap:4px;opacity:0;transition:opacity .2s;}
+.fm-item:hover .fm-actions{opacity:1;}
+.fm-act-btn{width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;}
+.fm-share{background:var(--blue-d);color:var(--blue2);}
+.fm-del{background:var(--rose-d);color:var(--rose);}
+
+/* ── SUPPORT / FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:8px;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;}
+.faq-q{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;transition:all .2s;}
+.faq-q:hover{color:var(--gold);}
+.faq-a{display:none;padding:0 16px 14px;font-size:13px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);}
+.faq-item.open .faq-a{display:block;padding-top:13px;}
+.faq-item.open .faq-q{color:var(--gold);}
+.faq-arr{transition:transform .2s;}.faq-item.open .faq-arr{transform:rotate(180deg);}
+
+/* research */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+.si{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 13px;display:flex;gap:10px;animation:pfade .3s ease both;}
+.sn2{width:22px;height:22px;background:var(--gold-d);border:1px solid rgba(240,180,41,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);flex-shrink:0;}
+.stxt{font-size:12.5px;color:var(--text2);line-height:1.5;}
+.stxt strong{color:var(--text);display:block;margin-bottom:2px;}
+
+/* chat */
+.chat-wrap{display:grid;grid-template-columns:1fr 265px;gap:15px;height:calc(100vh - 166px);}
+.chatl{background:var(--card);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;}
+.msgs{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:12px;}
+.msgs::-webkit-scrollbar{width:3px;}.msgs::-webkit-scrollbar-thumb{background:var(--border2);}
+.cin{padding:12px;border-top:1px solid var(--border);display:flex;gap:7px;background:linear-gradient(0deg,var(--card2),var(--card));}
+.cin textarea{flex:1;border-radius:9px;min-height:42px;max-height:120px;}
+.mbub{border-radius:5px 13px 13px 13px;padding:12px 16px;max-width:82%;font-size:13.5px;line-height:1.75;}
+.mbub.ai{background:linear-gradient(135deg,#080f26,#0c1628);border:1px solid rgba(59,130,246,.13);color:#c0cce8;}
+.mbub.user{background:linear-gradient(135deg,#101a30,#162038);border:1px solid var(--border2);color:var(--text);border-radius:13px 5px 13px 13px;align-self:flex-end;margin-left:auto;}
+.mm{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:5px;letter-spacing:.04em;}
+.sbtn{width:42px;height:42px;border-radius:9px;border:none;flex-shrink:0;background:linear-gradient(135deg,#1e3a8a,#2563eb,var(--blue));cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(59,130,246,.3);transition:all .2s;}
+.sbtn:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(59,130,246,.5);}
+.qps{display:flex;flex-direction:column;gap:6px;}
+.qp{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:12px;color:var(--text2);transition:all .2s;line-height:1.4;}
+.qp:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-d);}
+
+/* image gen grid */
+.igg{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:11px;}
+.gimg{aspect-ratio:1;border-radius:9px;background:linear-gradient(135deg,#0a1020,#0f1830);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:26px;cursor:pointer;transition:all .2s;overflow:hidden;position:relative;}
+.gimg:hover{border-color:var(--gold);}
+.gimg-lbl{position:absolute;bottom:0;left:0;right:0;padding:7px;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);font-size:10px;font-family:'Share Tech Mono',monospace;color:#fff;letter-spacing:.04em;opacity:0;transition:opacity .2s;}
+.gimg:hover .gimg-lbl{opacity:1;}
+
+/* profile */
+.prof-card{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:22px;text-align:center;margin-bottom:14px;}
+.prof-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;font-family:'Michroma',monospace;font-size:22px;color:#fff;margin:0 auto 13px;border:3px solid var(--gold);box-shadow:0 0 22px var(--gold-g);}
+.prof-name{font-family:'Michroma',monospace;font-size:14px;color:var(--gold);letter-spacing:.06em;margin-bottom:3px;}
+.prof-email{font-family:'Share Tech Mono',monospace;font-size:10.5px;color:var(--text3);letter-spacing:.04em;margin-bottom:16px;}
+.prof-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:16px;}
+.ps{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px;text-align:center;}
+.ps-n{font-family:'Michroma',monospace;font-size:17px;color:var(--blue2);}
+.ps-l{font-size:10.5px;color:var(--text3);font-family:'Share Tech Mono',monospace;margin-top:2px;}
+.voice-btn{width:60px;height:60px;border-radius:50%;border:2px solid var(--rose);background:var(--rose-d);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;margin:0 auto;font-size:24px;}
+.voice-btn.active{background:var(--rose);animation:vpuls 1s ease-in-out infinite;}
+@keyframes vpuls{0%,100%{box-shadow:0 0 0 0 rgba(244,63,94,.4)}50%{box-shadow:0 0 0 14px rgba(244,63,94,0)}}
+
+/* doc upload */
+.doc-drop{border:2px dashed var(--border2);border-radius:11px;padding:18px;text-align:center;cursor:pointer;transition:all .22s;position:relative;}
+.doc-drop:hover{border-color:var(--blue);background:var(--blue-d);}
+.doc-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+
+/* responsive */
+@media(max-width:860px){
+  .sidebar{width:54px;}.sidebar .tip{display:none;}
+  .studio,.res-grid,.chat-wrap{grid-template-columns:1fr;}
+  .analytics-grid{grid-template-columns:repeat(2,1fr);}
+  .tgrid{grid-template-columns:repeat(2,1fr);}
+  .sright{display:none;}
+  .chart-wrap{grid-template-columns:1fr;}
+  .tmpl-grid{grid-template-columns:repeat(2,1fr);}
+  .plans-grid{grid-template-columns:1fr;}
+}
+@media(max-width:560px){
+  .tgrid{grid-template-columns:repeat(2,1fr);}
+  .analytics-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-title{font-size:22px;}
+  .main .content{padding:13px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-logo">ROK</div>
+  <div class="sp-title">ROK AI</div>
+  <div class="sp-sub">// INITIALIZING CREATOR STUDIO v4.0</div>
+  <div class="sp-bar"><div class="sp-fill"></div></div>
+  <div class="sp-pct" id="spPct">0%</div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div id="nContainer"></div>
+
+<!-- MODALS -->
+<div id="loginWrap">
+  <div class="lbox">
+    <div class="llogo"><div class="llogo-n">ROK AI</div><div class="llogo-s">// CREATOR STUDIO v4.0</div></div>
+    <div class="ltabs"><div class="ltab on" onclick="lTab(this,'si')">SIGN IN</div><div class="ltab" onclick="lTab(this,'su')">SIGN UP</div></div>
+    <div id="si"><div class="lf"><label>Email</label><input type="text" id="li-e" placeholder="your@email.com"></div><div class="lf"><label>Password</label><input type="password" id="li-p" placeholder="••••••••"></div><button class="lbtn" onclick="doLogin()">→ SIGN IN</button></div>
+    <div id="su" style="display:none;"><div class="lf"><label>Name</label><input type="text" id="su-n" placeholder="Your name"></div><div class="lf"><label>Email</label><input type="text" id="su-e" placeholder="your@email.com"></div><div class="lf"><label>Password</label><input type="password" id="su-p" placeholder="Min 6 chars"></div><button class="lbtn" onclick="doSignup()">→ CREATE ACCOUNT</button></div>
+    <div class="ldiv">— OR —</div>
+    <button class="lguest" onclick="guestLogin()">🌐 CONTINUE AS GUEST</button>
+  </div>
+</div>
+
+<div id="planModal">
+  <div class="pm-box">
+    <div class="pm-title">⚡ CHOOSE YOUR PLAN</div>
+    <div class="plans-grid">
+      <div class="plan-card free">
+        <div class="plan-name">FREE</div>
+        <div class="plan-price">$0<span style="font-size:14px;color:var(--text2);font-family:'Share Tech Mono',monospace;">/mo</span></div>
+        <div class="plan-feat"><span>5 videos/month</span><span>720p quality</span><span>10 AI images</span><span>Basic templates</span><span>Watermark</span></div>
+        <button class="plan-btn" onclick="setPlan('free')">CONTINUE FREE</button>
+      </div>
+      <div class="plan-card pro">
+        <div class="plan-name">PRO</div>
+        <div class="plan-price">$19<span style="font-size:14px;color:var(--text2);font-family:'Share Tech Mono',monospace;">/mo</span></div>
+        <div class="plan-feat"><span>Unlimited videos</span><span>4K quality</span><span>100 AI images/day</span><span>All templates</span><span>No watermark</span><span>Priority support</span></div>
+        <button class="plan-btn" onclick="setPlan('pro')">GET PRO</button>
+      </div>
+      <div class="plan-card elite">
+        <div class="plan-name">ELITE</div>
+        <div class="plan-price">$49<span style="font-size:14px;color:var(--text2);font-family:'Share Tech Mono',monospace;">/mo</span></div>
+        <div class="plan-feat"><span>Everything in Pro</span><span>API access</span><span>Custom branding</span><span>Team workspace</span><span>Dedicated support</span><span>White label</span></div>
+        <button class="plan-btn" onclick="setPlan('elite')">GET ELITE</button>
+      </div>
+    </div>
+    <button class="bout btn" onclick="document.getElementById('planModal').classList.remove('show')" style="width:auto;padding:9px 20px;margin:0 auto;display:block;">CLOSE</button>
+  </div>
+</div>
+
+<div id="kbModal">
+  <div class="kb-box">
+    <div class="kb-title">⌨ SHORTCUTS <span style="cursor:pointer;color:var(--text3);font-size:16px;" onclick="closeKb()">✕</span></div>
+    <div class="kb-grid">
+      <div class="kbr"><span>Dashboard</span><span><kbd>Alt</kbd>+<kbd>1</kbd></span></div>
+      <div class="kbr"><span>Image→Video</span><span><kbd>Alt</kbd>+<kbd>2</kbd></span></div>
+      <div class="kbr"><span>Text→Video</span><span><kbd>Alt</kbd>+<kbd>3</kbd></span></div>
+      <div class="kbr"><span>Text→Audio</span><span><kbd>Alt</kbd>+<kbd>4</kbd></span></div>
+      <div class="kbr"><span>Animation</span><span><kbd>Alt</kbd>+<kbd>5</kbd></span></div>
+      <div class="kbr"><span>Video Editor</span><span><kbd>Alt</kbd>+<kbd>6</kbd></span></div>
+      <div class="kbr"><span>Research</span><span><kbd>Alt</kbd>+<kbd>7</kbd></span></div>
+      <div class="kbr"><span>Chat</span><span><kbd>Alt</kbd>+<kbd>8</kbd></span></div>
+      <div class="kbr"><span>Toggle Theme</span><span><kbd>Alt</kbd>+<kbd>T</kbd></span></div>
+      <div class="kbr"><span>Shortcuts</span><span><kbd>?</kbd></span></div>
+    </div>
+  </div>
+</div>
+
+<div id="shareModal">
+  <div class="share-box">
+    <div class="share-title">🔗 SHARE CREATION <span style="cursor:pointer;color:var(--text3);font-size:16px;" onclick="closeShare()">✕</span></div>
+    <div class="share-grid">
+      <div class="share-btn fb" onclick="doShare('Facebook')"><span class="share-icon">📘</span>Facebook</div>
+      <div class="share-btn yt" onclick="doShare('YouTube')"><span class="share-icon">▶️</span>YouTube</div>
+      <div class="share-btn tt" onclick="doShare('TikTok')"><span class="share-icon">🎵</span>TikTok</div>
+      <div class="share-btn ig" onclick="doShare('Instagram')"><span class="share-icon">📷</span>Instagram</div>
+      <div class="share-btn tw" onclick="doShare('X / Twitter')"><span class="share-icon">🐦</span>X / Twitter</div>
+      <div class="share-btn lk" onclick="doShare('LinkedIn')"><span class="share-icon">💼</span>LinkedIn</div>
+    </div>
+    <div class="share-link">
+      <input type="text" id="shareLink" value="https://rokai.app/creation/abc123" readonly>
+      <button class="share-copy" onclick="copyLink()">📋 COPY</button>
+    </div>
+  </div>
+</div>
+
+<!-- BG -->
+<div class="gbg"></div><div class="orb ob1"></div><div class="orb ob2"></div><div class="orb ob3"></div><div class="scanl"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="rok-m" onclick="goNav('home')">ROK</div>
+  <div class="nb on" onclick="goNav('home')" id="nb0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" color="#f0b429"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg><span class="tip">DASHBOARD</span></div>
+  <div class="nb" onclick="goNav('analytics')" id="nb-an"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="tip">ANALYTICS</span></div>
+  <div class="nb" onclick="goNav('img2vid')" id="nb1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3V9z" fill="#4a5880"/></svg><span class="tip">IMAGE→VIDEO (Alt+2)</span></div>
+  <div class="nb" onclick="goNav('txt2vid')" id="nb2"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></svg><span class="tip">TEXT→VIDEO (Alt+3)</span></div>
+  <div class="nb" onclick="goNav('txt2audio')" id="nb3"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg><span class="tip">TEXT→AUDIO (Alt+4)</span></div>
+  <div class="nb" onclick="goNav('animation')" id="nb4"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="tip">ANIMATION (Alt+5)</span></div>
+  <div class="nb" onclick="goNav('videditor')" id="nb5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg><span class="tip">VIDEO EDITOR (Alt+6)</span></div>
+  <div class="nsep"></div>
+  <div class="nb" onclick="goNav('imggen')" id="nb6"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="tip">IMAGE GEN</span></div>
+  <div class="nb" onclick="goNav('templates')" id="nb7"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span class="tip">TEMPLATES</span></div>
+  <div class="nb" onclick="goNav('files')" id="nb8"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><span class="tip">FILE MANAGER</span></div>
+  <div class="nb" onclick="goNav('research')" id="nb9"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="tip">RESEARCH (Alt+7)</span></div>
+  <div class="nb" onclick="goNav('chat')" id="nb10"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="tip">AI CHAT (Alt+8)</span></div>
+  <div class="nb" onclick="goNav('support')" id="nb11"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4a5880" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg><span class="tip">SUPPORT / FAQ</span></div>
+  <div class="su" onclick="goNav('profile')" id="sideUser"><span id="sideInit">G</span><span class="tip">PROFILE</span></div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tbl">
+      <span class="tbbrand" onclick="goNav('home')">ROK AI</span>
+      <span class="tbsep">/</span>
+      <span class="tbpage" id="tbPage">DASHBOARD</span>
+    </div>
+    <div class="tbr">
+      <select class="lsel" onchange="setLang(this.value)">
+        <option value="en">🌐 Auto</option><option value="bn">🇧🇩 বাংলা</option><option value="en">🇺🇸 English</option><option value="hi">🇮🇳 हिंदी</option><option value="ar">🇸🇦 العربية</option><option value="zh">🇨🇳 中文</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="ja">🇯🇵 日本語</option><option value="ko">🇰🇷 한국어</option><option value="pt">🇧🇷 Português</option><option value="ru">🇷🇺 Русский</option>
+      </select>
+      <div class="pill pg"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2"/></svg>ROK AI</div>
+      <div class="pill pe"><span class="dp"></span>ONLINE</div>
+      <button class="ibt" onclick="toggleTheme()" title="Theme">☀</button>
+      <button class="ibt" onclick="showKb()" title="Shortcuts (?)">⌨</button>
+      <button class="ibt" onclick="document.getElementById('planModal').classList.add('show')" title="Plans">⭐</button>
+      <div class="tbu" onclick="goNav('profile')">
+        <div class="tbav" id="tbAv">G</div>
+        <span class="tbun" id="tbUname">Guest</span>
+        <span class="plan-badge pb-free" id="planBadge">FREE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="page active" id="pg-home">
+      <div class="hero">
+        <div class="hero-tag">⚡ ROK AI v4.0 — FULL SUITE</div>
+        <div class="hero-title">Create Everything.<br>In Any Language.</div>
+        <p class="hero-sub" id="heroSub">AI-powered video, audio, animation, image generation, editing & research platform — fully multilingual.</p>
+        <div class="hero-chips">
+          <div class="hchip" onclick="goNav('img2vid')">🎬 Img→Video</div><div class="hchip" onclick="goNav('txt2vid')">✍ Text→Video</div><div class="hchip" onclick="goNav('txt2audio')">🎵 Audio</div><div class="hchip" onclick="goNav('animation')">✨ Animation</div><div class="hchip" onclick="goNav('videditor')">🎞 Editor</div><div class="hchip" onclick="goNav('imggen')">🖼 Image Gen</div><div class="hchip" onclick="goNav('templates')">📋 Templates</div><div class="hchip" onclick="goNav('research')">🔬 Research</div>
+        </div>
+      </div>
+      <div class="sttl">TOOLS <span></span></div>
+      <div class="tgrid">
+        <div class="tcard cg" onclick="goNav('img2vid')"><span class="tbadge bai">AI</span><div class="tico">🎬</div><div class="tname">IMAGE→VIDEO</div><div class="tdesc">Cinematic video from image</div></div>
+        <div class="tcard cb" onclick="goNav('txt2vid')"><span class="tbadge bpro">PRO</span><div class="tico">✍️</div><div class="tname">TEXT→VIDEO</div><div class="tdesc">Generate from any script</div></div>
+        <div class="tcard cv" onclick="goNav('txt2audio')"><span class="tbadge bai">AI</span><div class="tico">🎵</div><div class="tname">TEXT→AUDIO</div><div class="tdesc">Voiceovers in 20+ languages</div></div>
+        <div class="tcard cr2" onclick="goNav('animation')"><span class="tbadge bnew">NEW</span><div class="tico">✨</div><div class="tname">ANIMATION</div><div class="tdesc">2D/3D animation from text</div></div>
+        <div class="tcard ce" onclick="goNav('videditor')"><span class="tbadge bnew">NEW</span><div class="tico">🎞️</div><div class="tname">VIDEO EDITOR</div><div class="tdesc">Crop, trim, filters & effects</div></div>
+        <div class="tcard cc" onclick="goNav('imggen')"><span class="tbadge bai">AI</span><div class="tico">🖼️</div><div class="tname">IMAGE GEN</div><div class="tdesc">AI image generation</div></div>
+        <div class="tcard cp2" onclick="goNav('templates')"><span class="tbadge bai">AI</span><div class="tico">📋</div><div class="tname">TEMPLATES</div><div class="tdesc">Ready-made video templates</div></div>
+        <div class="tcard cteal" onclick="goNav('research')"><span class="tbadge bai">AI</span><div class="tico">🔬</div><div class="tname">RESEARCH</div><div class="tdesc">Deep AI research reports</div></div>
+      </div>
+      <div class="sttl">RECENT <span></span></div>
+      <div class="panel" style="margin-bottom:16px;"><div class="hist-list" id="histList"><div class="hempty">// NO CREATIONS YET</div></div></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="pg-analytics">
+      <div class="sttl">📊 ANALYTICS DASHBOARD <span></span></div>
+      <div class="analytics-grid">
+        <div class="an-card a1"><div class="an-trend up" id="anVid">0 ↑</div><div class="an-n" id="anVidN">0</div><div class="an-l">VIDEOS CREATED</div></div>
+        <div class="an-card a2"><div class="an-trend up" id="anAud">0 ↑</div><div class="an-n" id="anAudN">0</div><div class="an-l">AUDIOS CREATED</div></div>
+        <div class="an-card a3"><div class="an-trend up" id="anImg">0 ↑</div><div class="an-n" id="anImgN">0</div><div class="an-l">IMAGES GENERATED</div></div>
+        <div class="an-card a4"><div class="an-trend up" id="anRes">0 ↑</div><div class="an-n" id="anResN">0</div><div class="an-l">RESEARCHES DONE</div></div>
+        <div class="an-card a5 analytics-grid" style="grid-column:span 4;display:flex;justify-content:space-between;align-items:center;"><div><div class="an-n" id="anTotal">0</div><div class="an-l">TOTAL CREATIONS</div></div><div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);">Plan: <span id="anPlan" style="color:var(--gold)">FREE</span></div></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-card">
+          <div class="chart-title"><span>WEEKLY ACTIVITY</span><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);">Last 7 days</span></div>
+          <div class="bar-chart" id="barChart"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">TOOL USAGE</div>
+          <canvas id="donutCanvas" width="120" height="120" style="display:block;margin:0 auto;"></canvas>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pttl">📋 FULL CREATION LOG</div>
+        <div class="hist-list" style="max-height:300px;" id="fullHistList"><div class="hempty">// NO DATA YET</div></div>
+      </div>
+    </div>
+
+    <!-- IMAGE → VIDEO -->
+    <div class="page" id="pg-img2vid">
+      <div class="studio">
+        <div class="sleft">
+          <div class="shead"><h3 style="color:var(--gold)">🎬 IMAGE → VIDEO</h3><span class="pill pg" style="font-size:9.5px;">MOTION AI</span></div>
+          <div class="sbody">
+            <div class="uz" id="uz1" ondragover="doDrag(event,'uz1',1)" ondragleave="doDrag(event,'uz1',0)" ondrop="doDrop(event)"><input type="file" accept="image/*" onchange="doFile(event)"><span class="uzi">📷</span><div class="uzt"><strong>UPLOAD IMAGE</strong>Drag & drop · JPG PNG WEBP</div></div>
+            <div class="pvbox"><div class="pvph" id="pvph"><em>🖼</em>Preview</div><img id="pvImg" alt=""></div>
+            <div class="vmock" id="vm1"><div class="vgrid"></div><div class="vscn"></div><div class="vc tl"></div><div class="vc tr"></div><div class="vc bl"></div><div class="vc br"></div><div class="vlbl">ROK AI · OUTPUT</div><div class="vplay" onclick="openShare()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--gold)"><path d="M8 5v14l11-7z"/></svg></div><div class="vlive"><span class="ldot"></span>LIVE</div><div class="vdur" id="vd1">00:15</div></div>
+            <div class="prg" id="pr1"><div class="pi"><span id="pr1s">Processing...</span><span id="pr1p">0%</span></div><div class="pb"><div class="pf" id="pr1f"></div></div></div>
+          </div>
+        </div>
+        <div class="sright">
+          <div class="panel">
+            <div class="pttl">⚙ SETTINGS</div>
+            <div class="fr"><label class="lbl">Motion Style</label><select><option>Cinematic Pan</option><option>Ken Burns</option><option>Parallax Zoom</option><option>Slow Motion</option><option>Drone Shot</option></select></div>
+            <div class="fr"><label class="lbl">Duration: <span id="d1v" style="color:var(--gold)">15s</span></label><input type="range" min="5" max="60" value="15" oninput="document.getElementById('d1v').textContent=this.value+'s'"></div>
+            <div class="fr"><label class="lbl">Resolution</label><div class="cr"><div class="chip ob" onclick="pick(this,'r1')">720p</div><div class="chip on" onclick="pick(this,'r1')">1080p</div><div class="chip" onclick="pick(this,'r1')">4K</div></div></div>
+            <div class="fr"><label class="lbl">Prompt</label><textarea rows="2" placeholder="Describe the motion..."></textarea></div>
+            <button class="btn bgold" onclick="genV('v1','Image→Video','Video')">⚡ GENERATE VIDEO</button>
+          </div>
+          <div class="panel"><div class="pttl">💾 EXPORT</div><div class="cr"><div class="chip on" onclick="pick(this,'f1')">MP4</div><div class="chip" onclick="pick(this,'f1')">MOV</div><div class="chip" onclick="pick(this,'f1')">GIF</div></div><button class="btn bout" style="margin-top:9px;" onclick="notify('ok','Download','Starting download...')">⬇ DOWNLOAD</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT → VIDEO -->
+    <div class="page" id="pg-txt2vid">
+      <div class="studio">
+        <div class="sleft">
+          <div class="shead"><h3 style="color:var(--blue2)">✍️ TEXT → VIDEO</h3></div>
+          <div class="sbody">
+            <div class="fr"><label class="lbl">Script (any language)</label><textarea rows="5" id="tv-sc" placeholder="Write your script in any language..."></textarea></div>
+            <div class="vmock" id="vm2"><div class="vgrid"></div><div class="vscn"></div><div class="vc tl"></div><div class="vc tr"></div><div class="vc bl"></div><div class="vc br"></div><div class="vlbl">ROK AI · TEXT→VIDEO</div><div class="vplay" onclick="openShare()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--blue2)"><path d="M8 5v14l11-7z"/></svg></div><div class="vdur">00:30</div></div>
+            <div class="prg" id="pr2"><div class="pi"><span id="pr2s">Analyzing...</span><span id="pr2p">0%</span></div><div class="pb"><div class="pf" id="pr2f"></div></div></div>
+            <div class="out" id="out2"><div class="oh"><span>✅ AI ANALYSIS</span></div><div class="ob" id="out2b"></div></div>
+          </div>
+        </div>
+        <div class="sright">
+          <div class="panel"><div class="pttl">🎬 CONFIG</div><div class="fr"><label class="lbl">Category</label><select><option>Commercial</option><option>Educational</option><option>Social Media</option><option>Documentary</option></select></div><div class="fr"><label class="lbl">Duration: <span id="d2v" style="color:var(--blue2)">30s</span></label><input type="range" min="15" max="180" value="30" oninput="document.getElementById('d2v').textContent=this.value+'s'"></div><button class="btn bblue" onclick="genV('v2','Text→Video','Video')">🎬 GENERATE</button></div>
+          <div class="panel"><div class="pttl">🤖 AI WRITER</div><textarea rows="3" id="tv-as" placeholder="Ask AI to write script..."></textarea><button class="btn bout" style="margin-top:8px;" onclick="aiWrite('tv-as','out2b','out2')">✨ WRITE WITH AI</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT → AUDIO -->
+    <div class="page" id="pg-txt2audio">
+      <div class="studio">
+        <div class="sleft">
+          <div class="shead"><h3 style="color:var(--violet2)">🎵 TEXT → AUDIO</h3></div>
+          <div class="sbody">
+            <div class="fr"><label class="lbl">Text (any language)</label><textarea rows="6" id="au-t" placeholder="Enter text in any language..."></textarea></div>
+            <div class="wf" id="wf"><div id="wfi" style="display:flex;gap:3px;align-items:center;"></div></div>
+            <div class="prg" id="pr3"><div class="pi"><span id="pr3s">Synthesizing...</span><span id="pr3p">0%</span></div><div class="pb"><div class="pf" id="pr3f"></div></div></div>
+            <div class="out" id="out3"><div class="oh"><span>🎵 AUDIO READY</span><div style="display:flex;gap:6px;"><button class="btn bout bsm" onclick="openShare()">🔗 SHARE</button><button class="btn bout bsm" onclick="notify('ok','Download','MP3 downloading...')">⬇ MP3</button></div></div><div class="ob" id="out3b"></div></div>
+          </div>
+        </div>
+        <div class="sright">
+          <div class="panel"><div class="pttl">🎤 VOICE</div><div class="fr"><label class="lbl">Language</label><select><option>Auto</option><option>Bengali Male</option><option>Bengali Female</option><option>English US</option><option>Hindi Male</option><option>Arabic</option><option>Chinese</option><option>Spanish</option></select></div><div class="fr"><label class="lbl">Speed: <span id="spv" style="color:var(--violet2)">1.0x</span></label><input type="range" min="5" max="20" value="10" oninput="document.getElementById('spv').textContent=(this.value/10).toFixed(1)+'x'"></div><div class="fr"><label class="lbl">Emotion</label><div class="cr"><div class="chip ov" onclick="pick(this,'em')">Neutral</div><div class="chip" onclick="pick(this,'em')">Formal</div><div class="chip" onclick="pick(this,'em')">Excited</div><div class="chip" onclick="pick(this,'em')">Calm</div></div></div></div>
+          <div class="panel"><div class="pttl">🎼 MUSIC</div><div class="fr"><select><option>None</option><option>Soft Piano</option><option>Corporate</option><option>Inspirational</option><option>Orchestra</option></select></div><div class="fr"><label class="lbl">Vol: <span id="vol" style="color:var(--violet2)">30%</span></label><input type="range" min="0" max="100" value="30" oninput="document.getElementById('vol').textContent=this.value+'%'"></div><button class="btn bvio" onclick="genAudio()">🎵 GENERATE AUDIO</button></div>
+          <div class="panel"><div class="pttl">🎙 VOICE INPUT</div><div class="voice-btn" id="voiceBtn" onclick="toggleVoice()">🎙</div><div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10.5px;color:var(--text3);margin-top:8px;" id="voiceStat">Click to record</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANIMATION -->
+    <div class="page" id="pg-animation">
+      <div class="studio">
+        <div class="sleft">
+          <div class="shead"><h3 style="color:var(--rose)">✨ ANIMATION VIDEO</h3></div>
+          <div class="sbody">
+            <div class="fr"><label class="lbl">Concept (any language)</label><textarea rows="4" id="an-sc" placeholder="Describe animation concept..."></textarea></div>
+            <div class="tlw"><div class="tll"><span>⏱ TIMELINE</span><button class="btn bout bsm" onclick="addFrame()" style="padding:4px 10px;font-size:8.5px;">+ ADD</button></div><div class="tlt" id="tlTrack"></div></div>
+            <div class="vmock" id="vm3"><div class="vgrid"></div><div class="vscn"></div><div class="vc tl"></div><div class="vc tr"></div><div class="vc bl"></div><div class="vc br"></div><div class="vlbl">ROK AI · ANIMATION</div><div class="vplay" onclick="openShare()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--rose)"><path d="M8 5v14l11-7z"/></svg></div><div class="vdur">00:20</div></div>
+            <div class="prg" id="pr4"><div class="pi"><span id="pr4s">Rendering...</span><span id="pr4p">0%</span></div><div class="pb"><div class="pf" id="pr4f"></div></div></div>
+          </div>
+        </div>
+        <div class="sright">
+          <div class="panel"><div class="pttl">🎨 STYLE</div><div class="fr"><label class="lbl">Type</label><select><option>2D Flat</option><option>3D Motion</option><option>Whiteboard</option><option>Infographic</option><option>Typography</option><option>Cartoon</option><option>Particles</option></select></div><div class="fr"><label class="lbl">FPS</label><div class="cr"><div class="chip" onclick="pick(this,'fps')">24fps</div><div class="chip on" onclick="pick(this,'fps')">30fps</div><div class="chip" onclick="pick(this,'fps')">60fps</div></div></div><div class="fr"><label class="lbl">Duration: <span id="d4v" style="color:var(--rose)">20s</span></label><input type="range" min="5" max="120" value="20" oninput="document.getElementById('d4v').textContent=this.value+'s'"></div><button class="btn brose" onclick="genV('v4','Animation','Video')">✨ CREATE ANIMATION</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO EDITOR -->
+    <div class="page" id="pg-videditor">
+      <div class="studio">
+        <div class="sleft">
+          <div class="shead"><h3 style="color:var(--emerald)">🎞️ VIDEO EDITOR</h3><span class="pill pe" style="font-size:9.5px;">CROP · TRIM · FILTER</span></div>
+          <div class="sbody">
+            <div class="uz" id="uz-ve"><input type="file" accept="video/*,image/*" onchange="loadVE(event)"><span class="uzi">🎞</span><div class="uzt"><strong>UPLOAD VIDEO / IMAGE</strong>MP4 · MOV · AVI · PNG · JPG</div></div>
+            <div class="ve-toolbar">
+              <div class="ve-tool" onclick="veTool(this,'crop')">✂️ CROP</div>
+              <div class="ve-tool" onclick="veTool(this,'trim')">⏱ TRIM</div>
+              <div class="ve-tool" onclick="veTool(this,'rotate')">🔄 ROTATE</div>
+              <div class="ve-tool" onclick="veTool(this,'text')">📝 TEXT</div>
+              <div class="ve-tool" onclick="veTool(this,'sticker')">⭐ STICKER</div>
+              <div class="ve-tool" onclick="veTool(this,'speed')">⚡ SPEED</div>
+            </div>
+            <div class="ve-canvas" id="veCanvas">
+              <div class="ve-canvas-ph" id="veCph"><em>🎞</em>Upload media to start editing</div>
+              <img id="veImg" style="max-width:100%;max-height:100%;display:none;border-radius:8px;" alt="">
+              <div id="veOverlay" style="position:absolute;inset:0;display:none;border:3px dashed var(--gold);border-radius:8px;pointer-events:none;"></div>
+            </div>
+            <div class="sttl" style="margin-top:12px;">FILTERS <span></span></div>
+            <div class="ve-filters" id="veFilters"></div>
+            <div class="prg" id="pr-ve"><div class="pi"><span id="pr-ves">Applying effect...</span><span id="pr-vep">0%</span></div><div class="pb"><div class="pf" id="pr-vef"></div></div></div>
+          </div>
+        </div>
+        <div class="sright">
+          <div class="panel"><div class="pttl">⚙ ADJUSTMENTS</div><div class="fr"><label class="lbl">Brightness: <span id="bri-v" style="color:var(--emerald)">0</span></label><input type="range" min="-100" max="100" value="0" oninput="document.getElementById('bri-v').textContent=this.value;applyFilter()"></div><div class="fr"><label class="lbl">Contrast: <span id="con-v" style="color:var(--emerald)">0</span></label><input type="range" min="-100" max="100" value="0" oninput="document.getElementById('con-v').textContent=this.value;applyFilter()"></div><div class="fr"><label class="lbl">Saturation: <span id="sat-v" style="color:var(--emerald)">0</span></label><input type="range" min="-100" max="100" value="0" oninput="document.getElementById('sat-v').textContent=this.value;applyFilter()"></div><div class="fr"><label class="lbl">Blur: <span id="blur-v" style="color:var(--emerald)">0</span></label><input type="range" min="0" max="20" value="0" oninput="document.getElementById('blur-v').textContent=this.value;applyFilter()"></div></div>
+          <div class="panel"><div class="pttl">🎞 TRIM</div><div class="fr"><label class="lbl">Start: <span id="trim-s" style="color:var(--emerald)">0s</span></label><input type="range" min="0" max="60" value="0" oninput="document.getElementById('trim-s').textContent=this.value+'s'"></div><div class="fr"><label class="lbl">End: <span id="trim-e" style="color:var(--emerald)">30s</span></label><input type="range" min="0" max="60" value="30" oninput="document.getElementById('trim-e').textContent=this.value+'s'"></div><button class="btn bemer" onclick="genV('ve','Video Edit','Video')">✅ APPLY & EXPORT</button><button class="btn bout" style="margin-top:8px;" onclick="openShare()">🔗 SHARE</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE GEN -->
+    <div class="page" id="pg-imggen">
+      <div class="studio">
+        <div class="sleft">
+          <div class="shead"><h3 style="color:var(--cyan)">🖼️ AI IMAGE GENERATION</h3></div>
+          <div class="sbody">
+            <div class="fr"><label class="lbl">Image Prompt (any language)</label><textarea rows="4" id="ig-p" placeholder="Describe image..."></textarea></div>
+            <div class="prg" id="pr6"><div class="pi"><span id="pr6s">Generating...</span><span id="pr6p">0%</span></div><div class="pb"><div class="pf" id="pr6f"></div></div></div>
+            <div class="igg" id="igGrid"><div class="gimg">🖼<span class="gimg-lbl">Image 1</span></div><div class="gimg">🖼<span class="gimg-lbl">Image 2</span></div><div class="gimg">🖼<span class="gimg-lbl">Image 3</span></div><div class="gimg">🖼<span class="gimg-lbl">Image 4</span></div></div>
+          </div>
+        </div>
+        <div class="sright">
+          <div class="panel"><div class="pttl">🎨 SETTINGS</div><div class="fr"><label class="lbl">Style</label><select><option>Photorealistic</option><option>Digital Art</option><option>Anime</option><option>Oil Painting</option><option>Watercolor</option><option>Cinematic</option></select></div><div class="fr"><label class="lbl">Ratio</label><div class="cr"><div class="chip on" onclick="pick(this,'ar')">1:1</div><div class="chip" onclick="pick(this,'ar')">16:9</div><div class="chip" onclick="pick(this,'ar')">9:16</div></div></div><button class="btn" style="background:linear-gradient(135deg,#0e7490,var(--cyan));color:#000;box-shadow:0 4px 20px rgba(6,182,212,.26);" onclick="genImg()">🖼 GENERATE</button></div>
+          <div class="panel"><div class="pttl">💡 PROMPT ENHANCE</div><textarea rows="2" id="ig-ph" placeholder="Simple description..."></textarea><button class="btn bout" style="margin-top:8px;" onclick="aiEnhance()">✨ ENHANCE</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMPLATES -->
+    <div class="page" id="pg-templates">
+      <div class="sttl">📋 TEMPLATE LIBRARY <span></span></div>
+      <div class="fr" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+        <div class="chip on" onclick="filterTmpl(this,'all')">All</div>
+        <div class="chip" onclick="filterTmpl(this,'promo')">Promo</div>
+        <div class="chip" onclick="filterTmpl(this,'edu')">Education</div>
+        <div class="chip" onclick="filterTmpl(this,'social')">Social Media</div>
+        <div class="chip" onclick="filterTmpl(this,'corp')">Corporate</div>
+        <div class="chip" onclick="filterTmpl(this,'music')">Music</div>
+      </div>
+      <div class="tmpl-grid" id="tmplGrid"></div>
+    </div>
+
+    <!-- FILE MANAGER -->
+    <div class="page" id="pg-files">
+      <div class="sttl">📁 FILE MANAGER <span></span></div>
+      <div class="fm-toolbar">
+        <input type="text" class="fm-search" placeholder="Search files..." oninput="filterFiles(this.value)">
+        <div class="fm-filter">
+          <div class="chip on" onclick="filterFileType(this,'all')">All</div>
+          <div class="chip" onclick="filterFileType(this,'Video')">Video</div>
+          <div class="chip" onclick="filterFileType(this,'Audio')">Audio</div>
+          <div class="chip" onclick="filterFileType(this,'Image')">Image</div>
+          <div class="chip" onclick="filterFileType(this,'Research')">Research</div>
+        </div>
+      </div>
+      <div class="fm-grid" id="fmGrid"><div style="text-align:center;padding:40px;color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:12px;grid-column:1/-1;">// CREATE SOMETHING TO SEE FILES HERE</div></div>
+    </div>
+
+    <!-- RESEARCH -->
+    <div class="page" id="pg-research">
+      <div class="res-grid">
+        <div>
+          <div class="sttl">🔬 AI RESEARCH <span></span></div>
+          <div class="panel" style="margin-bottom:12px;">
+            <div class="fr"><label class="lbl">Topic (any language)</label><textarea rows="4" id="res-q" placeholder="Enter research topic..."></textarea></div>
+            <div class="fr"><div class="doc-drop"><input type="file" accept=".pdf,.doc,.docx,.txt" onchange="handleDoc(event)"><div style="font-size:26px;margin-bottom:5px;">📄</div><div style="font-size:12px;color:var(--text2);">Upload PDF/DOC/TXT for AI analysis</div></div></div>
+            <div class="fr"><label class="lbl">Depth</label><div class="cr"><div class="chip" onclick="pick(this,'rd')">Summary</div><div class="chip on" onclick="pick(this,'rd')">Detailed</div><div class="chip" onclick="pick(this,'rd')">Academic</div></div></div>
+            <button class="btn bemer" onclick="doResearch()">🔬 START RESEARCH</button>
+          </div>
+          <div class="prg" id="pr5"><div class="pi"><span id="pr5s">Gathering info...</span><span id="pr5p">0%</span></div><div class="pb"><div class="pf" id="pr5f"></div></div></div>
+          <div class="out" id="out5"><div class="oh"><span>📊 RESEARCH REPORT</span><div style="display:flex;gap:6px;"><button class="btn bout bsm" onclick="openShare()">🔗 SHARE</button><button class="btn bout bsm" onclick="copyRes()">📋 COPY</button></div></div><div class="ob" id="out5b"></div></div>
+        </div>
+        <div>
+          <div class="sttl">📚 SOURCES <span></span></div>
+          <div class="panel"><div class="pttl">WEB SEARCH</div><div class="fr"><input type="text" id="ws-q" placeholder="Search the web..."><button class="btn bblue" style="margin-top:8px;" onclick="webSearch()">🔍 SEARCH</button></div><div id="wsResults" style="margin-top:12px;display:flex;flex-direction:column;gap:7px;"></div></div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:7px;" id="srcList"><div style="text-align:center;padding:22px;color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:11px;">// SOURCES APPEAR AFTER RESEARCH</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="page" id="pg-chat">
+      <div class="chat-wrap">
+        <div class="chatl">
+          <div class="shead"><h3 style="color:var(--cyan)">💬 ROK AI CHAT</h3><span class="pill" style="background:var(--blue-d);border:1px solid rgba(59,130,246,.2);color:var(--blue2);padding:4px 10px;font-size:9.5px;font-family:'Share Tech Mono',monospace;letter-spacing:.05em;">CLAUDE SONNET 4</span></div>
+          <div class="msgs" id="chatMsgs"><div class="mbub ai" id="welcomeMsg"><div class="mm">ROK AI · NOW</div>Hello! I'm ROK AI v4.0 — your multilingual creative assistant. Video, audio, animation, images, editing & research — all in one place, in any language. 🌍<br><small style="color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:10px;">বাংলা · हिंदी · العربية · 中文 · Español · Français · Deutsch · 日本語 · 한국어</small></div></div>
+          <div class="cin"><textarea id="cInp" rows="1" placeholder="Message in any language..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea><button class="sbtn" onclick="sendChat()"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M15 9L3 3l2.5 6L3 15l12-6z" fill="white"/></svg></button></div>
+        </div>
+        <div class="sright">
+          <div class="panel"><div class="pttl">⚡ QUICK PROMPTS</div><div class="qps"><div class="qp" onclick="setChat('Write a professional video script')">📝 Video Script</div><div class="qp" onclick="setChat('Research the latest AI trends')">🔬 Research AI</div><div class="qp" onclick="setChat('Create social media content')">📣 Social Media</div><div class="qp" onclick="setChat('Give animation ideas')">✨ Animation Ideas</div><div class="qp" onclick="setChat('Translate to English:')">🌐 Translate</div></div></div>
+          <div class="panel"><div class="pttl">⚙ SETTINGS</div><div class="fr"><label class="lbl">Temp: <span id="tmpV" style="color:var(--gold)">0.7</span></label><input type="range" min="0" max="10" value="7" oninput="document.getElementById('tmpV').textContent=(this.value/10).toFixed(1)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="page" id="pg-support">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div class="sttl">❓ FAQ <span></span></div>
+          <div class="faq-list" id="faqList"></div>
+        </div>
+        <div>
+          <div class="sttl">💬 SUPPORT CHAT <span></span></div>
+          <div class="panel" style="margin-bottom:12px;">
+            <div class="pttl">ASK ROK AI SUPPORT</div>
+            <div class="msgs" style="height:200px;overflow-y:auto;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px;" id="supportMsgs">
+              <div class="mbub ai" style="font-size:13px;"><div class="mm">Support · NOW</div>Hello! How can I help you today? Ask me anything about ROK AI.</div>
+            </div>
+            <div style="display:flex;gap:7px;"><textarea id="supportInp" rows="2" style="flex:1;border-radius:9px;" placeholder="Describe your issue..."></textarea><button class="sbtn" onclick="sendSupport()"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M15 9L3 3l2.5 6L3 15l12-6z" fill="white"/></svg></button></div>
+          </div>
+          <div class="panel">
+            <div class="pttl">📞 CONTACT</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text2);">
+              <div>📧 support@rokai.app</div>
+              <div>💬 Discord: discord.gg/rokai</div>
+              <div>🐦 Twitter: @ROKAIapp</div>
+              <div>⏱ Response: &lt; 24 hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="pg-profile">
+      <div style="max-width:600px;margin:0 auto;">
+        <div class="prof-card">
+          <div class="prof-av" id="profAv">G</div>
+          <div class="prof-name" id="profName">Guest User</div>
+          <div class="prof-email" id="profEmail">guest@rokai.app</div>
+          <div class="prof-stats">
+            <div class="ps"><div class="ps-n" id="profV">0</div><div class="ps-l">VIDEOS</div></div>
+            <div class="ps"><div class="ps-n" id="profA">0</div><div class="ps-l">AUDIOS</div></div>
+            <div class="ps"><div class="ps-n" id="profT">0</div><div class="ps-l">TOTAL</div></div>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
+            <button class="btn bout bsm" onclick="document.getElementById('planModal').classList.add('show')" style="width:auto;padding:8px 18px;">⭐ UPGRADE PLAN</button>
+            <button class="btn bout bsm" onclick="doLogout()" style="width:auto;padding:8px 18px;">→ SIGN OUT</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="pttl">⚙ PREFERENCES</div>
+          <div class="fr"><label class="lbl">Theme</label><div class="cr"><div class="chip on" id="thD" onclick="setTheme('dark')">Dark</div><div class="chip" id="thL" onclick="setTheme('light')">Light</div></div></div>
+        </div>
+        <div class="panel" style="margin-top:12px;">
+          <div class="pttl">📋 HISTORY</div>
+          <div class="hist-list" style="max-height:280px;" id="histList2"><div class="hempty">// NO HISTORY</div></div>
+          <button class="btn bout" style="margin-top:11px;" onclick="clearHistory()">🗑 CLEAR</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ══ STATE ══
+let user=null,chatHist=[],supHist=[],creations=[],curLang='en',curTheme='dark',curPlan='free',isLoading=false,chatCnt=0,dragSrc=null,veFile=null,analytics={videos:0,audios:0,images:0,research:0};
+
+const LANG={
+  en:{hero:'Create videos, audio, animations & images in any language.',sys:'You are ROK AI v4, multilingual AI creative assistant. Respond in the same language the user uses. Be helpful and concise.'},
+  bn:{hero:'যেকোনো ভাষায় ভিডিও, অডিও, অ্যানিমেশন ও ইমেজ তৈরি করুন।',sys:'তুমি ROK AI v4। ইউজার যে ভাষায় লেখে সেই ভাষায় উত্তর দাও।'},
+  hi:{hero:'किसी भी भाषा में वीडियो, ऑडियो और एनिमेशन बनाएं।',sys:'आप ROK AI v4 हैं। उपयोगकर्ता की भाषा में जवाब दें।'},
+  ar:{hero:'أنشئ مقاطع فيديو وصوت ورسوم متحركة بأي لغة.',sys:'أنت ROK AI v4. رد بنفس لغة المستخدم.'},
+  zh:{hero:'用任何语言创建视频、音频和动画。',sys:'你是ROK AI v4。用用户的语言回复。'},
+  es:{hero:'Crea videos, audio y animaciones en cualquier idioma.',sys:'Eres ROK AI v4. Responde en el idioma del usuario.'},
+  fr:{hero:"Créez des vidéos, de l'audio et des animations dans n'importe quelle langue.",sys:"Tu es ROK AI v4. Réponds dans la langue de l'utilisateur."},
+  de:{hero:'Erstellen Sie Videos, Audio und Animationen in jeder Sprache.',sys:'Du bist ROK AI v4. Antworte in der Sprache des Benutzers.'},
+  ja:{hero:'あらゆる言語でビデオ、音声、アニメーションを作成します。',sys:'あなたはROK AI v4。ユーザーの言語で返答してください。'},
+  ko:{hero:'모든 언어로 비디오, 오디오, 애니메이션을 만드세요.',sys:'당신은 ROK AI v4. 사용자 언어로 답변하세요.'},
+};
+const getSys=()=>(LANG[curLang]||LANG.en).sys;
+
+// ══ SPLASH ══
+(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*16+8;if(p>100)p=100;document.getElementById('spPct').textContent=Math.round(p)+'%';if(p>=100){clearInterval(iv);setTimeout(()=>{document.getElementById('splash').classList.add('gone');setTimeout(()=>{document.getElementById('splash').style.display='none';checkAuth();},800);},300);}},90);})();
+
+// ══ AUTH ══
+function checkAuth(){const s=localStorage.getItem('rokUser');if(s){user=JSON.parse(s);applyUser();}else document.getElementById('loginWrap').classList.add('show');}
+function lTab(el,id){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById('si').style.display=id==='si'?'':'none';document.getElementById('su').style.display=id==='su'?'':'none';}
+function doLogin(){const e=document.getElementById('li-e').value.trim(),p=document.getElementById('li-p').value;if(!e||!p){notify('err','Error','Fill all fields');return;}user={name:e.split('@')[0],email:e,initial:e[0].toUpperCase(),plan:'free'};localStorage.setItem('rokUser',JSON.stringify(user));document.getElementById('loginWrap').classList.remove('show');applyUser();notify('ok','Welcome Back!','Logged in as '+user.name);}
+function doSignup(){const n=document.getElementById('su-n').value.trim(),e=document.getElementById('su-e').value.trim(),p=document.getElementById('su-p').value;if(!n||!e||p.length<6){notify('err','Error','Complete all fields (6+ char password)');return;}user={name:n,email:e,initial:n[0].toUpperCase(),plan:'free'};localStorage.setItem('rokUser',JSON.stringify(user));document.getElementById('loginWrap').classList.remove('show');applyUser();notify('ok','Account Created!','Welcome, '+n+'!');}
+function guestLogin(){user={name:'Guest',email:'guest@rokai.app',initial:'G',plan:'free'};document.getElementById('loginWrap').classList.remove('show');applyUser();}
+function doLogout(){localStorage.removeItem('rokUser');user=null;creations=[];document.getElementById('loginWrap').classList.add('show');}
+function applyUser(){if(!user)return;['tbAv','sideInit','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=user.initial||'G';});document.getElementById('tbUname').textContent=user.name||'Guest';document.getElementById('profName').textContent=user.name||'Guest';document.getElementById('profEmail').textContent=user.email||'';curPlan=user.plan||'free';updatePlanUI();loadHistory();}
+
+// ══ PLAN ══
+function setPlan(plan){curPlan=plan;if(user){user.plan=plan;localStorage.setItem('rokUser',JSON.stringify(user));}updatePlanUI();document.getElementById('planModal').classList.remove('show');notify('ok','Plan Updated!','You are now on '+plan.toUpperCase()+' plan');}
+function updatePlanUI(){const b=document.getElementById('planBadge');if(!b)return;const cls={'free':'pb-free','pro':'pb-pro','elite':'pb-elite'};b.className='plan-badge '+(cls[curPlan]||'pb-free');b.textContent=curPlan.toUpperCase();document.getElementById('anPlan').textContent=curPlan.toUpperCase();}
+
+// ══ THEME ══
+function toggleTheme(){setTheme(curTheme==='dark'?'light':'dark');}
+function setTheme(t){curTheme=t;document.body.setAttribute('data-theme',t==='light'?'light':'');document.getElementById('thD').className='chip'+(t==='dark'?' on':'');document.getElementById('thL').className='chip'+(t==='light'?' on':'');document.querySelector('.ibt[title="Theme"]').textContent=t==='dark'?'☀':'🌙';}
+
+// ══ LANGUAGE ══
+function setLang(l){curLang=l||'en';const D=LANG[curLang]||LANG.en;document.getElementById('heroSub').textContent=D.hero;}
+
+// ══ NAV ══
+const ttls={home:'DASHBOARD',analytics:'ANALYTICS',img2vid:'IMAGE→VIDEO',txt2vid:'TEXT→VIDEO',txt2audio:'TEXT→AUDIO',animation:'ANIMATION',videditor:'VIDEO EDITOR',imggen:'IMAGE GEN',templates:'TEMPLATES',files:'FILE MANAGER',research:'RESEARCH',chat:'AI CHAT',support:'SUPPORT',profile:'PROFILE'};
+const nbMap={home:'nb0',analytics:'nb-an',img2vid:'nb1',txt2vid:'nb2',txt2audio:'nb3',animation:'nb4',videditor:'nb5',imggen:'nb6',templates:'nb7',files:'nb8',research:'nb9',chat:'nb10',support:'nb11',profile:null};
+function goNav(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(n=>{n.classList.remove('on');const s=n.querySelector('svg');if(s)s.style.stroke='#4a5880';});
+  document.getElementById('pg-'+id)?.classList.add('active');
+  const nb=nbMap[id];if(nb){const el=document.getElementById(nb);if(el){el.classList.add('on');const s=el.querySelector('svg');if(s)s.style.stroke='var(--gold)';}}
+  document.getElementById('tbPage').textContent=ttls[id]||id.toUpperCase();
+  if(id==='analytics')updateAnalytics();
+  if(id==='templates')renderTemplates();
+  if(id==='files')renderFiles();
+}
+
+// ══ KB ══
+document.addEventListener('keydown',e=>{
+  if(e.altKey){const m={'1':'home','2':'img2vid','3':'txt2vid','4':'txt2audio','5':'animation','6':'videditor','7':'research','8':'chat','t':'theme'};const k=e.key.toLowerCase();if(m[k]){e.preventDefault();if(k==='t')toggleTheme();else goNav(m[k]);}}
+  if(e.key==='?'&&document.activeElement.tagName!=='TEXTAREA'&&document.activeElement.tagName!=='INPUT')showKb();
+  if(e.key==='Escape'){closeKb();closeShare();}
+});
+function showKb(){document.getElementById('kbModal').classList.add('show');}
+function closeKb(){document.getElementById('kbModal').classList.remove('show');}
+
+// ══ NOTIFICATIONS ══
+const nIco={ok:'✅',err:'❌',warn:'⚠️',info:'ℹ️'};
+function notify(type='info',title='',msg=''){const c=document.getElementById('nContainer');const n=document.createElement('div');n.className=`notif ${type}`;n.innerHTML=`<span class="ni">${nIco[type]||'ℹ️'}</span><div class="nb"><div class="nt">${title}</div><div class="nm">${msg}</div></div><span class="nc" onclick="this.parentElement.remove()">✕</span>`;c.appendChild(n);setTimeout(()=>{n.classList.add('out');setTimeout(()=>n.remove(),320);},3600);}
+
+// ══ SHARE ══
+function openShare(){document.getElementById('shareModal').classList.add('show');}
+function closeShare(){document.getElementById('shareModal').classList.remove('show');}
+function doShare(platform){closeShare();notify('ok','Shared!','Content shared to '+platform);window.open('https://'+platform.toLowerCase().replace(/\s.*$/,'')+'.com','_blank');}
+function copyLink(){navigator.clipboard?.writeText(document.getElementById('shareLink').value);notify('ok','Copied!','Share link copied to clipboard');}
+
+// ══ HELPERS ══
+function pick(el,grp){el.closest('.cr').querySelectorAll('.chip').forEach(c=>{c.className='chip';});el.classList.add('on');}
+function pad(n){return String(n).padStart(2,'0');}
+
+// ══ FILE UPLOAD ══
+function doFile(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{document.getElementById('pvImg').src=ev.target.result;document.getElementById('pvImg').style.display='block';document.getElementById('pvph').style.display='none';};r.readAsDataURL(f);notify('ok','Uploaded',f.name+' ready');}
+function doDrag(e,id,on){e.preventDefault();document.getElementById(id)?.classList.toggle('on',on);}
+function doDrop(e){e.preventDefault();document.getElementById('uz1')?.classList.remove('on');const f=e.dataTransfer.files[0];if(f)doFile({target:{files:[f]}});}
+function loadVE(e){const f=e.target.files[0];if(!f)return;veFile=f;if(f.type.startsWith('image/')){const r=new FileReader();r.onload=ev=>{const img=document.getElementById('veImg');img.src=ev.target.result;img.style.display='block';document.getElementById('veCph').style.display='none';};r.readAsDataURL(f);}notify('ok','Loaded',f.name+' ready for editing');}
+function handleDoc(e){const f=e.target.files[0];if(!f)return;notify('ok','Document Uploaded',f.name+' ready for analysis');document.getElementById('res-q').value='Analyze and summarize: '+f.name;}
+
+// ══ VIDEO EDITOR ══
+const veFilters2=[{n:'Normal',icon:'🔲',css:''},{n:'Vivid',icon:'🌈',css:'saturate(1.8) contrast(1.1)'},{n:'Vintage',icon:'📸',css:'sepia(0.6) contrast(1.1)'},{n:'B&W',icon:'⚫',css:'grayscale(1)'},{n:'Cool',icon:'🧊',css:'hue-rotate(180deg) saturate(1.2)'},{n:'Warm',icon:'🔆',css:'sepia(0.3) saturate(1.4)'},{n:'Fade',icon:'🌫',css:'opacity(0.75) saturate(0.7)'},{n:'Sharp',icon:'⚡',css:'contrast(1.3) saturate(1.2)'}];
+(function buildVEF(){const c=document.getElementById('veFilters');if(!c)return;c.innerHTML=veFilters2.map((f,i)=>`<div class="ve-filter${i===0?' on':''}" onclick="applyVEFilter(this,'${f.css}')">${f.icon}<div style="font-family:'Share Tech Mono',monospace;font-size:9px;margin-top:3px;">${f.n}</div></div>`).join('');})();
+function veTool(el,tool){document.querySelectorAll('.ve-tool').forEach(t=>t.classList.remove('active'));el.classList.add('active');const ov=document.getElementById('veOverlay');if(!ov)return;if(tool==='crop'){ov.style.display='block';ov.style.inset='10% 15%';notify('info','Crop Mode','Drag to set crop area');}else{ov.style.display='none';notify('info',tool.charAt(0).toUpperCase()+tool.slice(1)+' Mode','Tool activated');}};
+function applyVEFilter(el,css){document.querySelectorAll('.ve-filter').forEach(f=>f.classList.remove('on'));el.classList.add('on');const img=document.getElementById('veImg');if(img)img.style.filter=css;notify('ok','Filter Applied','Effect applied successfully');}
+function applyFilter(){const img=document.getElementById('veImg');if(!img)return;const bri=document.getElementById('bri-v').textContent;const con=document.getElementById('con-v').textContent;const sat=document.getElementById('sat-v').textContent;const blur=document.getElementById('blur-v').textContent;img.style.filter=`brightness(${1+bri/200}) contrast(${1+con/200}) saturate(${1+sat/200}) blur(${blur}px)`;}
+
+// ══ GENERATION ══
+const genSteps={'v1':['Analyzing image...','Loading AI...','Generating frames...','Adding motion...','Rendering...','Complete! ✅'],'v2':['Analyzing script...','Planning scenes...','Generating visuals...','Compositing...','Rendering...','Ready! ✅'],'v4':['Processing concept...','Keyframes...','Rendering...','Effects...','Compositing...','Done! ✅'],'ve':['Applying edits...','Processing...','Encoding...','Finalizing...','Ready! ✅']};
+function genV(key,name,type){
+  const cfgs={v1:{pr:'pr1',pf:'pr1f',pp:'pr1p',ps:'pr1s',vm:'vm1'},v2:{pr:'pr2',pf:'pr2f',pp:'pr2p',ps:'pr2s',vm:'vm2',out:'out2',ob:'out2b'},v4:{pr:'pr4',pf:'pr4f',pp:'pr4p',ps:'pr4s',vm:'vm3'},ve:{pr:'pr-ve',pf:'pr-vef',pp:'pr-vep',ps:'pr-ves'}};
+  const c=cfgs[key];if(!c)return;
+  const vm=c.vm?document.getElementById(c.vm):null;vm?.classList.remove('show');
+  const pr=document.getElementById(c.pr);pr.classList.add('show');
+  const steps=genSteps[key]||['Processing...','Done! ✅'];
+  let p=0,si=0;
+  const iv=setInterval(()=>{p+=Math.random()*10+4;if(p>100)p=100;document.getElementById(c.pf).style.width=p+'%';document.getElementById(c.pp).textContent=Math.round(p)+'%';const ni=Math.min(Math.floor(p/20),steps.length-1);if(ni!==si){si=ni;document.getElementById(c.ps).textContent=steps[si];}if(p>=100){clearInterval(iv);setTimeout(()=>{pr.classList.remove('show');vm?.classList.add('show');if(key==='v4')buildTL();if(c.ob){document.getElementById(c.ob).innerHTML='<div style="color:var(--emerald);font-family:\'Share Tech Mono\',monospace;font-size:12px;margin-bottom:7px;">✅ Complete</div><div style="color:var(--text2);">Generated successfully. Ready to share or download.</div>';document.getElementById(c.out).classList.add('show');}addHistory(name,type);notify('ok',name+' Done!','Ready to share or download');},400);}},320);}
+
+function genAudio(){
+  const pr=document.getElementById('pr3');pr.classList.add('show');
+  const wf=document.getElementById('wf'),out=document.getElementById('out3'),ob=document.getElementById('out3b');
+  wf.classList.remove('show');out.classList.remove('show');
+  const steps=['Detecting language...','Synthesizing voice...','Mixing music...','Ready! ✅'];
+  let p=0,si=0;
+  const iv=setInterval(()=>{p+=Math.random()*14+6;if(p>100)p=100;document.getElementById('pr3f').style.width=p+'%';document.getElementById('pr3p').textContent=Math.round(p)+'%';const ni=Math.min(Math.floor(p/25),steps.length-1);if(ni!==si){si=ni;document.getElementById('pr3s').textContent=steps[si];}if(p>=100){clearInterval(iv);setTimeout(()=>{pr.classList.remove('show');buildWF();wf.classList.add('show');const w=(document.getElementById('au-t').value.trim().split(' ').length)||10;ob.innerHTML='<div style="color:var(--emerald);font-family:\'Share Tech Mono\',monospace;font-size:12px;margin-bottom:7px;">✅ Audio Ready!</div><div style="color:var(--text2);">Duration: ~'+Math.ceil(w/3)+' sec | MP3 320kbps | Language: Auto-detected</div>';out.classList.add('show');addHistory('Text→Audio','Audio');notify('ok','Audio Ready!','Download or share your audio');},380);}},300);}
+
+// ══ IMAGE GEN ══
+async function genImg(){
+  const prompt=document.getElementById('ig-p').value.trim();
+  if(!prompt){notify('warn','Missing','Enter an image description');return;}
+  const pr=document.getElementById('pr6');pr.classList.add('show');
+  let p=0;const iv=setInterval(()=>{p+=Math.random()*10+5;if(p>100)p=100;document.getElementById('pr6f').style.width=p+'%';document.getElementById('pr6p').textContent=Math.round(p)+'%';if(p>=100)clearInterval(iv);},280);
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are ROK AI image concept generator. For the given prompt, create 4 distinct image descriptions as a JSON array. Each: {id:0-3,title:"short title (3 words max)",desc:"vivid 2-sentence description",style:"style name",mood:"mood word"}. Return ONLY valid JSON array, no other text.',messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content?.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    let imgs;try{imgs=JSON.parse(text);}catch{imgs=[{id:0,title:'Image 1',desc:'AI-generated artwork based on your prompt.',style:'Photorealistic',mood:'Dramatic'},{id:1,title:'Image 2',desc:'Alternative creative interpretation.',style:'Digital Art',mood:'Vibrant'},{id:2,title:'Image 3',desc:'Cinematic composition of the concept.',style:'Cinematic',mood:'Moody'},{id:3,title:'Image 4',desc:'Minimalist artistic rendering.',style:'Minimal',mood:'Clean'}];}
+    document.getElementById('pr6').classList.remove('show');
+    const colors=[['#0a1428','#1a2848'],['#1a0a28','#2a1848'],['#0a2018','#1a3828'],['#281a0a','#483018']];
+    const grid=document.getElementById('igGrid');grid.innerHTML='';
+    imgs.slice(0,4).forEach((im,i)=>{const[c1,c2]=colors[i%4];const d=document.createElement('div');d.className='gimg';d.innerHTML=`<div style="width:100%;height:100%;background:linear-gradient(135deg,${c1},${c2});border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;"><div style="font-size:24px;margin-bottom:7px;">🖼</div><div style="font-family:'Michroma',monospace;font-size:9.5px;color:var(--gold);letter-spacing:.05em;margin-bottom:5px;">${im.title||'Image '+(i+1)}</div><div style="font-size:10.5px;color:var(--text2);line-height:1.5;">${(im.desc||'').substring(0,70)}...</div><div style="position:absolute;top:7px;right:7px;font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text3);background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;">${im.style||'AI'}</div></div><span class="gimg-lbl">${im.mood||'AI Art'}</span>`;d.onclick=()=>openShare();grid.appendChild(d);});
+    addHistory('Image Gen',('Image'));notify('ok','Images Ready!','4 AI concepts generated — click to share');
+  }catch(e){document.getElementById('pr6').classList.remove('show');notify('err','Error',e.message);}
+}
+
+async function aiEnhance(){
+  const t=document.getElementById('ig-ph').value.trim();if(!t){notify('warn','Empty','Enter a description');return;}
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'You are an expert image prompt engineer. Take a simple description and expand it into a detailed, vivid image generation prompt. Return ONLY the enhanced prompt, no explanations.',messages:[{role:'user',content:t}]})});const data=await res.json();const text=data.content?.map(b=>b.text||'').join('')||'';document.getElementById('ig-p').value=text;document.getElementById('ig-ph').value='';notify('ok','Prompt Enhanced!','Ready to generate images');}catch(e){notify('err','Error',e.message);}
+}
+
+// ══ TEMPLATES ══
+const TEMPLATES=[
+  {id:1,name:'Product Launch',cat:'promo',icon:'🚀',bg:['#0a1428','#1a2040'],color:'var(--blue2)',badge:'HOT',plan:'free'},
+  {id:2,name:'Explainer Video',cat:'edu',icon:'📚',bg:['#0a2018','#1a3828'],color:'var(--emerald)',badge:'FREE',plan:'free'},
+  {id:3,name:'Instagram Reel',cat:'social',icon:'📱',bg:['#280a18','#400a28'],color:'var(--rose)',badge:'VIRAL',plan:'free'},
+  {id:4,name:'Corporate Intro',cat:'corp',icon:'🏢',bg:['#1a1000','#2a1a00'],color:'var(--gold)',badge:'PRO',plan:'pro'},
+  {id:5,name:'Music Visualizer',cat:'music',icon:'🎵',bg:['#180a28','#281040'],color:'var(--violet2)',badge:'NEW',plan:'free'},
+  {id:6,name:'YouTube Intro',cat:'social',icon:'▶️',bg:['#280a0a','#401010'],color:'var(--rose)',badge:'POPULAR',plan:'free'},
+  {id:7,name:'Whiteboard Explainer',cat:'edu',icon:'✏️',bg:['#0a1818','#102828'],color:'var(--cyan)',badge:'AI',plan:'free'},
+  {id:8,name:'News Opener',cat:'corp',icon:'📺',bg:['#1a1428','#241a38'],color:'var(--blue2)',badge:'PRO',plan:'pro'},
+  {id:9,name:'TikTok Style',cat:'social',icon:'🎶',bg:['#0a0a14','#141420'],color:'var(--violet2)',badge:'TREND',plan:'free'},
+];
+function renderTemplates(cat='all'){
+  const grid=document.getElementById('tmplGrid');
+  const filtered=cat==='all'?TEMPLATES:TEMPLATES.filter(t=>t.cat===cat);
+  grid.innerHTML=filtered.map(t=>{const locked=t.plan!=='free'&&curPlan==='free';return`<div class="tmpl-card" onclick="${locked?"document.getElementById('planModal').classList.add('show')":"useTemplate("+t.id+")"}"><div class="tmpl-thumb" style="background:linear-gradient(135deg,${t.bg[0]},${t.bg[1]});${locked?'filter:brightness(0.5)':''}">${locked?'🔒':t.icon}</div><span class="tmpl-badge" style="background:var(--gold-d);color:var(--gold);border:1px solid rgba(240,180,41,.2);">${t.badge}${locked?' 🔒':''}</span><div class="tmpl-info"><div class="tmpl-name">${t.name}</div><div class="tmpl-cat">${t.cat.toUpperCase()} · ${t.plan.toUpperCase()}</div></div></div>`;}).join('');
+}
+function filterTmpl(el,cat){el.closest('.fr').querySelectorAll('.chip').forEach(c=>c.className='chip');el.classList.add('on');renderTemplates(cat);}
+function useTemplate(id){const t=TEMPLATES.find(x=>x.id===id);if(!t)return;notify('ok','Template Loaded!',t.name+' template applied');goNav('txt2vid');}
+
+// ══ FILE MANAGER ══
+function renderFiles(filter='all',search=''){
+  const grid=document.getElementById('fmGrid');
+  if(!creations.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);font-family:\'Share Tech Mono\',monospace;font-size:12px;grid-column:1/-1;">// CREATE SOMETHING TO SEE FILES HERE</div>';return;}
+  const filtered=creations.filter(c=>{const matchType=filter==='all'||c.type===filter;const matchSearch=!search||c.name.toLowerCase().includes(search.toLowerCase());return matchType&&matchSearch;});
+  const icons={Video:'🎬',Audio:'🎵',Image:'🖼',Research:'🔬',Animation:'✨'};
+  const colors={Video:['#0a1428','#1a2848'],Audio:['#180a28','#281040'],Image:['#0a2018','#1a3828'],Research:['#0a1818','#102828'],Animation:['#280a0a','#401010']};
+  grid.innerHTML=filtered.map(c=>{const[c1,c2]=(colors[c.type]||colors.Video);return`<div class="fm-item"><div class="fm-thumb" style="background:linear-gradient(135deg,${c1},${c2});">${icons[c.type]||'📄'}<div class="fm-actions"><button class="fm-act-btn fm-share" onclick="event.stopPropagation();openShare()" title="Share">🔗</button><button class="fm-act-btn fm-del" onclick="event.stopPropagation();delHistory(${c.id})" title="Delete">🗑</button></div></div><div class="fm-info"><div class="fm-name">${c.name}</div><div class="fm-meta">${c.type} · ${c.time}</div></div></div>`;}).join('');
+  if(!filtered.length)grid.innerHTML='<div style="text-align:center;padding:32px;color:var(--text3);font-family:\'Share Tech Mono\',monospace;font-size:12px;grid-column:1/-1;">// NO FILES MATCH</div>';
+}
+function filterFiles(q){renderFiles('all',q);}
+function filterFileType(el,type){el.closest('.fm-filter').querySelectorAll('.chip').forEach(c=>c.className='chip');el.classList.add('on');renderFiles(type);}
+
+// ══ ANALYTICS ══
+function updateAnalytics(){
+  analytics={videos:0,audios:0,images:0,research:0};
+  creations.forEach(c=>{if(c.type==='Video')analytics.videos++;else if(c.type==='Audio')analytics.audios++;else if(c.type==='Image')analytics.images++;else if(c.type==='Research')analytics.research++;});
+  ['Vid','Aud','Img','Res','Total'].forEach(k=>{});
+  document.getElementById('anVidN').textContent=analytics.videos;
+  document.getElementById('anAudN').textContent=analytics.audios;
+  document.getElementById('anImgN').textContent=analytics.images;
+  document.getElementById('anResN').textContent=analytics.research;
+  document.getElementById('anTotal').textContent=creations.length;
+  buildBarChart();buildDonut();
+  renderFullHist();
+}
+function buildBarChart(){
+  const c=document.getElementById('barChart');if(!c)return;
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const colors=['bv','bg','be','bvo','br','bc','bv'];
+  c.innerHTML=days.map((d,i)=>{const h=Math.floor(Math.random()*90+10);return`<div class="bar-col"><div class="bar-fill ${colors[i]}" style="height:${h}px;"></div><div class="bar-lbl">${d}</div></div>`;}).join('');
+}
+function buildDonut(){
+  const canvas=document.getElementById('donutCanvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');const total=Math.max(creations.length,1);
+  const data=[{label:'Video',val:analytics.videos,color:'#3b82f6'},{label:'Audio',val:analytics.audios,color:'#a78bfa'},{label:'Image',val:analytics.images,color:'#06b6d4'},{label:'Research',val:analytics.research,color:'#10b981'}];
+  ctx.clearRect(0,0,120,120);let start=-Math.PI/2;
+  data.forEach(d=>{const angle=(d.val/total)*Math.PI*2||0.01;ctx.beginPath();ctx.moveTo(60,60);ctx.arc(60,60,50,start,start+angle);ctx.fillStyle=d.color;ctx.fill();start+=angle;});
+  ctx.beginPath();ctx.arc(60,60,28,0,Math.PI*2);ctx.fillStyle='var(--card)';ctx.fill();
+  const leg=document.getElementById('donutLegend');if(leg)leg.innerHTML=data.map(d=>`<div class="dl-row"><div class="dl-dot" style="background:${d.color};"></div>${d.label}<span class="dl-val">${d.val}</span></div>`).join('');
+}
+function renderFullHist(){const el=document.getElementById('fullHistList');if(!el)return;if(!creations.length){el.innerHTML='<div class="hempty">// NO DATA YET</div>';return;}el.innerHTML=creations.map(c=>`<div class="hi"><div class="hil"><span class="hiico">${{Video:'🎬',Audio:'🎵',Image:'🖼',Research:'🔬'}[c.type]||'⚡'}</span><div class="hiinfo"><strong>${c.name}</strong><span>${c.type} · ${c.time}</span></div></div><div class="hir"><span class="hshare" onclick="openShare()">🔗</span><span class="hdel" onclick="delHistory(${c.id})">🗑</span></div></div>`).join('');}
+
+// ══ RESEARCH ══
+async function doResearch(){
+  const q=document.getElementById('res-q').value.trim();if(!q){notify('warn','Missing','Enter a research topic');return;}
+  const pr=document.getElementById('pr5');pr.classList.add('show');
+  const out=document.getElementById('out5'),ob=document.getElementById('out5b');
+  out.classList.remove('show');
+  const steps=['Gathering info...','Verifying sources...','Analyzing...','Writing report...'];
+  let p=0,si=0;
+  const iv=setInterval(()=>{p+=Math.random()*8+4;if(p>88)p=88;document.getElementById('pr5f').style.width=p+'%';document.getElementById('pr5p').textContent=Math.round(p)+'%';const ni=Math.min(Math.floor(p/22),steps.length-1);if(ni!==si){si=ni;document.getElementById('pr5s').textContent=steps[si];}},400);
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:getSys()+' You are also an expert researcher. Write comprehensive reports with: Introduction, Main Analysis, Key Findings, Conclusion. Respond in the same language as the query.',messages:[{role:'user',content:'Research: '+q}]})});
+    clearInterval(iv);document.getElementById('pr5f').style.width='100%';document.getElementById('pr5p').textContent='100%';
+    const data=await res.json();const text=data.content?.map(b=>b.text||'').join('')||'No data.';
+    setTimeout(()=>{pr.classList.remove('show');ob.innerHTML=text.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');out.classList.add('show');buildSources(q);addHistory('Research: '+q.substring(0,28),'Research');notify('ok','Research Complete!','Report ready — copy or share');},400);
+  }catch(e){clearInterval(iv);pr.classList.remove('show');ob.innerHTML=`<span style="color:var(--rose)">Error: ${e.message}</span>`;out.classList.add('show');}
+}
+function buildSources(q){
+  const src=document.getElementById('srcList');
+  src.innerHTML=[{n:'01',t:'AI Deep Analysis',d:`Analysis of: "${q.substring(0,38)}..."`},{n:'02',t:'Knowledge Base',d:'Multiple verified sources'},{n:'03',t:'Expert Insights',d:'Academic & professional data'},{n:'04',t:'Current Data',d:'Latest available information'}].map((s,i)=>`<div class="si" style="animation-delay:${i*.1}s"><div class="sn2">${s.n}</div><div class="stxt"><strong>${s.t}</strong>${s.d}</div></div>`).join('');
+}
+function copyRes(){navigator.clipboard?.writeText(document.getElementById('out5b').innerText);notify('ok','Copied!','Research copied to clipboard');}
+
+// ══ WEB SEARCH ══
+async function webSearch(){
+  const q=document.getElementById('ws-q').value.trim();if(!q){notify('warn','Missing','Enter search query');return;}
+  const el=document.getElementById('wsResults');el.innerHTML='<div style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--text3);text-align:center;padding:12px;">⏳ Searching...</div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,system:'You are a web search assistant. Provide 3-4 relevant search results as JSON array: [{title,url,desc}]. Return ONLY valid JSON.',messages:[{role:'user',content:'Search: '+q}]})});
+    const data=await res.json();const text=data.content?.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    let results;try{results=JSON.parse(text);}catch{results=[{title:'Result for: '+q,url:'https://google.com/search?q='+encodeURIComponent(q),desc:'Click to search on Google.'}];}
+    el.innerHTML=results.map(r=>`<div class="si" style="cursor:pointer;" onclick="window.open('${r.url}','_blank')"><div style="flex:1;"><div style="font-size:12.5px;color:var(--blue2);margin-bottom:2px;font-weight:600;">${r.title||'Result'}</div><div style="font-size:11.5px;color:var(--text3);margin-bottom:3px;font-family:'Share Tech Mono',monospace;">${(r.url||'').substring(0,50)}...</div><div style="font-size:12px;color:var(--text2);">${r.desc||''}</div></div></div>`).join('');
+    if(document.getElementById('res-q').value.trim())document.getElementById('res-q').value+='\n\nSearch context: '+q;
+  }catch(e){el.innerHTML=`<div style="color:var(--rose);font-size:12px;padding:8px;">Error: ${e.message}</div>`;}
+}
+
+// ══ AI WRITE ══
+async function aiWrite(inId,obId,outId){
+  const prompt=document.getElementById(inId).value.trim();if(!prompt){notify('warn','Empty','Enter a prompt');return;}
+  if(outId)document.getElementById(outId)?.classList.add('show');
+  const ob=document.getElementById(obId);if(ob)ob.textContent='⏳ Generating...';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:getSys()+' You are also a professional content writer.',messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();const text=data.content?.map(b=>b.text||'').join('')||'No response.';
+    if(ob)ob.innerHTML=text.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    notify('ok','Done!','AI content generated');
+  }catch(e){if(ob)ob.innerHTML=`<span style="color:var(--rose)">Error: ${e.message}</span>`;}
+}
+
+// ══ CHAT ══
+function setChat(t){document.getElementById('cInp').value=t;document.getElementById('cInp').focus();}
+async function sendChat(){
+  if(isLoading)return;const inp=document.getElementById('cInp');const text=inp.value.trim();if(!text)return;inp.value='';inp.style.height='auto';isLoading=true;chatCnt++;
+  const msgs=document.getElementById('chatMsgs');document.getElementById('welcomeMsg')?.remove();
+  const ub=document.createElement('div');ub.className='mbub user';ub.innerHTML=`<div class="mm" style="text-align:right;">YOU · NOW</div>${text}`;msgs.appendChild(ub);
+  const ab=document.createElement('div');ab.className='mbub ai';ab.innerHTML='<div class="mm">ROK AI · NOW</div><span style="opacity:.45">⏳...</span>';msgs.appendChild(ab);msgs.scrollTop=msgs.scrollHeight;
+  chatHist.push({role:'user',content:text});
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:getSys()+' Help with video scripts, audio, animation, research, images, editing. Be concise.',messages:chatHist})});
+    const data=await res.json();const reply=data.content?.map(b=>b.text||'').join('')||"Can't respond now.";
+    ab.innerHTML='<div class="mm">ROK AI · NOW</div>'+reply.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    chatHist.push({role:'assistant',content:reply});
+  }catch(e){ab.innerHTML=`<div class="mm">ROK AI</div><span style="color:var(--rose)">Error: ${e.message}</span>`;}
+  msgs.scrollTop=msgs.scrollHeight;isLoading=false;
+}
+
+// ══ SUPPORT ══
+async function sendSupport(){
+  const inp=document.getElementById('supportInp');const text=inp.value.trim();if(!text)return;inp.value='';
+  const msgs=document.getElementById('supportMsgs');
+  const ub=document.createElement('div');ub.className='mbub user';ub.style.fontSize='13px';ub.innerHTML=`<div class="mm" style="text-align:right;">YOU</div>${text}`;msgs.appendChild(ub);
+  const ab=document.createElement('div');ab.className='mbub ai';ab.style.fontSize='13px';ab.innerHTML='<div class="mm">Support</div>⏳...';msgs.appendChild(ab);msgs.scrollTop=msgs.scrollHeight;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,system:'You are a friendly ROK AI customer support agent. Answer questions about the ROK AI platform features. Be helpful and concise.',messages:[...supHist,{role:'user',content:text}]})});
+    const data=await res.json();const reply=data.content?.map(b=>b.text||'').join('')||"I'll help you shortly.";
+    ab.innerHTML='<div class="mm">Support</div>'+reply.replace(/\n/g,'<br>');supHist.push({role:'user',content:text},{role:'assistant',content:reply});
+  }catch(e){ab.innerHTML=`<div class="mm">Support</div><span style="color:var(--rose)">Error: ${e.message}</span>`;}
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ══ FAQ ══
+const FAQS=[
+  {q:'How does Image→Video work?',a:'Upload any image and ROK AI uses advanced motion AI to create cinematic videos with effects like Ken Burns, parallax zoom, slow motion, and more.'},
+  {q:'What languages are supported?',a:'ROK AI supports 20+ languages including Bengali, English, Hindi, Arabic, Chinese, Spanish, French, German, Japanese, Korean, and more. The AI automatically detects your language.'},
+  {q:'How do I upgrade my plan?',a:'Click the ⭐ button in the top bar or go to Profile page. Pro plan gives unlimited videos, 4K quality and 100 AI images/day.'},
+  {q:'Can I share my creations?',a:'Yes! Every creation has a Share button. You can share directly to Facebook, YouTube, TikTok, Instagram, X/Twitter, and LinkedIn.'},
+  {q:'How does Voice Input work?',a:'In Text→Audio page, click the microphone button. Speak in any language and ROK AI will convert your speech to text automatically.'},
+  {q:'What is the Video Editor?',a:'The Video Editor lets you crop, trim, rotate, add text & stickers, adjust brightness/contrast/saturation, and apply 8 different visual filters.'},
+  {q:"What's in the Template Library?",a:'Pre-made video templates for product launches, education, social media (Instagram/TikTok/YouTube), corporate, and music. Some templates require Pro plan.'},
+];
+(function buildFAQ(){const list=document.getElementById('faqList');if(!list)return;list.innerHTML=FAQS.map((f,i)=>`<div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this.parentElement)"><span>${f.q}</span><span class="faq-arr">▾</span></div><div class="faq-a">${f.a}</div></div>`).join('');})();
+function toggleFAQ(el){el.classList.toggle('open');}
+
+// ══ VOICE ══
+let recognition=null,isListening=false;
+function toggleVoice(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){notify('warn','Not Supported','Voice input not available in this browser');return;}
+  if(isListening){recognition?.stop();return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.continuous=false;recognition.interimResults=true;recognition.lang='';
+  recognition.onstart=()=>{isListening=true;document.getElementById('voiceBtn').classList.add('active');document.getElementById('voiceStat').textContent='🔴 Listening...';};
+  recognition.onresult=e=>{const t=Array.from(e.results).map(r=>r[0].transcript).join('');document.getElementById('au-t').value=t;};
+  recognition.onend=()=>{isListening=false;document.getElementById('voiceBtn').classList.remove('active');document.getElementById('voiceStat').textContent='✅ Captured!';notify('ok','Voice Captured','Speech converted to text');};
+  recognition.start();
+}
+
+// ══ WAVEFORM ══
+function buildWF(){const c=document.getElementById('wfi');c.innerHTML='';for(let i=0;i<40;i++){const b=document.createElement('div');b.className='wb';const h=Math.random()*34+5;b.style.cssText=`height:${h}px;animation-delay:${(Math.random()*1.2).toFixed(2)}s;animation-duration:${(Math.random()*.8+.8).toFixed(2)}s;`;c.appendChild(b);}}
+
+// ══ TIMELINE ══
+let frameCnt=0;
+function buildTL(){const tl=document.getElementById('tlTrack');tl.innerHTML='';['INTRO','SCENE 1','SCENE 2','SCENE 3','OUTRO'].forEach((l,i)=>addTLFrame(l,i===0));addTLAdd();}
+function addFrame(){frameCnt++;addTLFrame('FRAME '+frameCnt,false);}
+function addTLFrame(label,active){
+  const tl=document.getElementById('tlTrack');const add=tl.querySelector('.tfa');
+  const f=document.createElement('div');f.className='tf'+(active?' on':'');f.textContent=label;f.draggable=true;
+  f.ondragstart=e=>{dragSrc=f;e.dataTransfer.effectAllowed='move';f.style.opacity='.4';};
+  f.ondragend=()=>{dragSrc=null;document.querySelectorAll('.tf').forEach(x=>x.classList.remove('dov'));f.style.opacity='1';};
+  f.ondragover=e=>{e.preventDefault();if(dragSrc&&dragSrc!==f)f.classList.add('dov');};
+  f.ondragleave=()=>f.classList.remove('dov');
+  f.ondrop=e=>{e.preventDefault();f.classList.remove('dov');if(dragSrc&&dragSrc!==f){const p=f.parentNode;const all=[...p.querySelectorAll('.tf')];const si=all.indexOf(dragSrc),di=all.indexOf(f);if(si<di)p.insertBefore(dragSrc,f.nextSibling);else p.insertBefore(dragSrc,f);}};
+  f.onclick=()=>{document.querySelectorAll('.tf').forEach(x=>x.classList.remove('on'));f.classList.add('on');};
+  if(add)tl.insertBefore(f,add);else tl.appendChild(f);
+}
+function addTLAdd(){const tl=document.getElementById('tlTrack');const a=document.createElement('div');a.className='tfa';a.textContent='+';a.onclick=addFrame;tl.appendChild(a);}
+
+// ══ HISTORY ══
+function addHistory(name,type){
+  const icons={Video:'🎬',Audio:'🎵',Image:'🖼',Research:'🔬',Animation:'✨'};
+  const item={id:Date.now(),name,type,icon:icons[type]||'⚡',time:new Date().toLocaleTimeString()};
+  creations.unshift(item);if(creations.length>50)creations=creations.slice(0,50);
+  if(user)localStorage.setItem('rokHist_'+user.email,JSON.stringify(creations));
+  const tc=creations.length;document.getElementById('profT').textContent=tc;
+  const vc=creations.filter(c=>c.type==='Video').length;const ac=creations.filter(c=>c.type==='Audio').length;
+  document.getElementById('profV').textContent=vc;document.getElementById('profA').textContent=ac;
+  renderHistory();
+}
+function loadHistory(){if(!user)return;const s=localStorage.getItem('rokHist_'+user.email);if(s){creations=JSON.parse(s);renderHistory();}}
+function renderHistory(){
+  const html=creations.length?creations.slice(0,8).map(c=>`<div class="hi"><div class="hil"><span class="hiico">${c.icon}</span><div class="hiinfo"><strong>${c.name}</strong><span>${c.type} · ${c.time}</span></div></div><div class="hir"><span class="hshare" onclick="openShare()">🔗</span><span class="hdel" onclick="delHistory(${c.id})">🗑</span></div></div>`).join(''):'<div class="hempty">// NO CREATIONS YET</div>';
+  document.getElementById('histList').innerHTML=html;
+  if(document.getElementById('histList2'))document.getElementById('histList2').innerHTML=html||'<div class="hempty">// NO HISTORY</div>';
+}
+function delHistory(id){creations=creations.filter(c=>c.id!==id);if(user)localStorage.setItem('rokHist_'+user.email,JSON.stringify(creations));renderHistory();renderFiles();notify('info','Deleted','Item removed');}
+function clearHistory(){creations=[];if(user)localStorage.removeItem('rokHist_'+user.email);renderHistory();renderFiles();notify('info','Cleared','History cleared');}
+
+// ══ AUTO RESIZE CHAT ══
+['cInp','supportInp'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});});
+
+buildTL();renderTemplates();
+</script>
+</body>
+</html>
