@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0a0b14">
 <title>ROK AI — বাংলা Smart AI Assistant | Free AI Chat</title>
-<meta name="description" content="ROK AI বাংলাদেশের সেরা বিনামূল্যের AI Assistant। বাংলায় কথা বলুন, code লিখুন, research করুন। Powered by ROK AI">
+<meta name="description" content="ROK AI বাংলাদেশের সেরা বিনামূল্যের AI Assistant। বাংলায় কথা বলুন, code লিখুন, research করুন। Powered by Claude AI।">
 <meta name="keywords" content="ROK AI, বাংলা AI, AI chat Bangladesh, free AI assistant">
 <meta name="author" content="ROK AI Team">
 <meta name="robots" content="index, follow">
@@ -504,6 +504,98 @@ main { padding-top: 60px; position: relative; z-index: 10; }
   .hero-btns { flex-direction: column; }
   .hero-btns .btn { width: 100%; }
 }
+
+/* ── LANGUAGE PICKER ── */
+.lang-modal-box {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 20px; padding: 0; width: 100%;
+  max-width: 560px; max-height: 88vh;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  animation: modalIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.lang-modal-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: linear-gradient(90deg, var(--primary), var(--gold), var(--violet));
+}
+.lang-modal-header {
+  padding: 20px 22px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.lang-search-wrap {
+  padding: 14px 18px 10px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+}
+.lang-search {
+  width: 100%; background: #0e1020; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 9px 14px 9px 38px; color: var(--text);
+  font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none;
+  transition: border-color .2s;
+}
+.lang-search:focus { border-color: var(--primary); }
+.lang-search::placeholder { color: var(--text3); }
+.lang-search-icon {
+  position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
+  color: var(--text3); pointer-events: none;
+}
+.lang-region-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text3);
+  padding: 12px 18px 6px;
+}
+.lang-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px; padding: 4px 14px 12px;
+}
+.lang-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--surface);
+  cursor: pointer; transition: all .18s; text-align: left;
+}
+.lang-btn:hover { border-color: rgba(99,102,241,.35); background: rgba(99,102,241,.08); }
+.lang-btn.selected { border-color: var(--primary); background: rgba(99,102,241,.15); }
+.lang-btn.selected .lang-name { color: var(--primary-light); }
+.lang-flag { font-size: 20px; flex-shrink: 0; line-height: 1; }
+.lang-info { min-width: 0; }
+.lang-name { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lang-native { font-size: 10.5px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lang-body { flex: 1; overflow-y: auto; padding-bottom: 8px; }
+.lang-body::-webkit-scrollbar { width: 4px; }
+.lang-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 2px; }
+.lang-footer {
+  padding: 14px 18px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0;
+}
+.lang-current-display {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text2);
+}
+
+/* Navbar language button */
+.nav-lang-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 11px 5px 8px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: transparent;
+  cursor: pointer; transition: all .18s; font-size: 13px; color: var(--text2);
+  white-space: nowrap;
+}
+.nav-lang-btn:hover { border-color: rgba(99,102,241,.4); color: var(--primary-light); background: rgba(99,102,241,.08); }
+.nav-lang-flag { font-size: 16px; line-height: 1; }
+.nav-lang-code { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: .05em; }
+
+/* Chat sidebar language selector */
+.sidebar-lang-btn {
+  margin: 4px 8px; padding: 8px 11px; border-radius: 9px;
+  border: 1px solid var(--border); background: var(--surface);
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  transition: all .18s; color: var(--text2); font-size: 12.5px;
+}
+.sidebar-lang-btn:hover { border-color: rgba(99,102,241,.3); color: var(--primary-light); }
+
+@media (max-width: 540px) {
+  .lang-grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 5px; }
+  .lang-modal-box { max-height: 95vh; border-radius: 16px; }
+}
 </style>
 </head>
 <body>
@@ -520,7 +612,116 @@ main { padding-top: 60px; position: relative; z-index: 10; }
 <!-- ══ NOTIFICATIONS ══ -->
 <div id="notifContainer"></div>
 
-<!-- ══ MODALS ══ -->
+<!-- ══ API KEY SETUP MODAL ══ -->
+<div class="modal-overlay" id="apiKeyModal" style="z-index:9999;">
+  <div class="modal-box" style="max-width:460px;">
+    <div id="apiKeyModalHeader">
+      <div style="font-size:22px;text-align:center;margin-bottom:8px;">🔑</div>
+      <div style="font-size:16px;font-weight:800;color:#fff;text-align:center;margin-bottom:6px;" id="apiKeyTitle">Anthropic API Key দিন</div>
+      <div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:20px;line-height:1.6;" id="apiKeySubtitle">ROK AI কাজ করতে Anthropic এর Claude API Key দরকার। এটি সম্পূর্ণ আপনার browser এ সেভ থাকে — কোথাও পাঠানো হয় না।</div>
+    </div>
+
+    <!-- Error banner -->
+    <div id="apiKeyErrBanner" style="display:none;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--rose);display:none;align-items:center;gap:8px;">
+      ⚠️ API Key ভুল বা মেয়াদ শেষ হয়েছে। নতুন key দিন।
+    </div>
+
+    <!-- Steps -->
+    <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:16px;margin-bottom:18px;">
+      <div style="font-size:12px;font-weight:700;color:var(--primary-light);letter-spacing:.06em;margin-bottom:10px;">📋 API Key কিভাবে পাবেন?</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2);">
+          <span style="width:22px;height:22px;border-radius:50%;background:rgba(99,102,241,.2);color:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;">1</span>
+          <span>এই লিংকে যান: <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--primary-light);text-decoration:underline;">console.anthropic.com/settings/keys</a></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2);">
+          <span style="width:22px;height:22px;border-radius:50%;background:rgba(99,102,241,.2);color:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;">2</span>
+          <span>Account তৈরি করুন বা Login করুন (বিনামূল্যে)</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2);">
+          <span style="width:22px;height:22px;border-radius:50%;background:rgba(99,102,241,.2);color:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;">3</span>
+          <span><strong style="color:#fff;">Create Key</strong> বাটনে ক্লিক করুন → Key copy করুন</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2);">
+          <span style="width:22px;height:22px;border-radius:50%;background:rgba(99,102,241,.2);color:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;">4</span>
+          <span>নিচে paste করুন → Save করুন</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div style="margin-bottom:14px;">
+      <label style="display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;">আপনার API Key</label>
+      <div style="position:relative;">
+        <input type="password" id="apiKeyInput"
+          style="width:100%;background:#0e1020;border:2px solid var(--border);border-radius:11px;padding:12px 46px 12px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .2s;letter-spacing:.04em;"
+          placeholder="sk-ant-api03-..."
+          oninput="validateApiKeyInput(this)"
+          onfocus="this.style.borderColor='var(--primary)'"
+          onblur="this.style.borderColor='var(--border)'">
+        <button onclick="toggleApiKeyVisibility()" id="apiKeyEyeBtn"
+          style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;transition:color .15s;"
+          onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">👁</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:'JetBrains Mono',monospace;" id="apiKeyHint">
+        🔒 আপনার browser এ locally সেভ হয় — আমাদের server এ যায় না
+      </div>
+    </div>
+
+    <!-- Free tier info -->
+    <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:9px;padding:11px 14px;margin-bottom:16px;font-size:12.5px;color:var(--text2);line-height:1.6;">
+      💡 <strong style="color:var(--emerald);">Free tier পাবেন!</strong> নতুন Anthropic account এ free credits দেওয়া হয়। Credit card ছাড়াই শুরু করা যায়।
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex;gap:10px;">
+      <button onclick="saveApiKey()" id="apiKeySaveBtn"
+        style="flex:1;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:13px;font-weight:700;padding:12px;border-radius:11px;border:none;cursor:pointer;transition:all .2s;opacity:.5;"
+        disabled>💾 Save করুন</button>
+      <a href="https://console.anthropic.com/settings/keys" target="_blank"
+        style="padding:12px 16px;border-radius:11px;border:1.5px solid rgba(99,102,241,.35);color:var(--primary-light);font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;text-decoration:none;transition:all .2s;white-space:nowrap;"
+        onmouseover="this.style.background='rgba(99,102,241,.1)'" onmouseout="this.style.background='transparent'">
+        🔗 Key নিন
+      </a>
+    </div>
+
+    <!-- Already have key saved -->
+    <div id="apiKeyClearRow" style="display:none;margin-top:10px;text-align:center;">
+      <button onclick="clearApiKey()" style="background:none;border:none;color:var(--rose);font-size:12px;cursor:pointer;text-decoration:underline;opacity:.7;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">
+        🗑 Saved key মুছুন
+      </button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="langModal" style="align-items:center;padding:16px;">
+  <div class="lang-modal-box">
+    <div class="lang-modal-header">
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#fff;">🌍 ভাষা নির্বাচন করুন</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px;">Choose Your Language</div>
+      </div>
+      <button onclick="closeModal('langModal')" style="color:var(--text3);cursor:pointer;font-size:20px;background:none;border:none;line-height:1;transition:color .15s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text3)'">✕</button>
+    </div>
+    <!-- Search -->
+    <div class="lang-search-wrap" style="position:relative;">
+      <svg class="lang-search-icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="lang-search" id="langSearchInput" type="text" placeholder="ভাষা খুঁজুন... (Search language)" oninput="filterLanguages(this.value)">
+    </div>
+    <!-- Language list -->
+    <div class="lang-body" id="langBody"></div>
+    <!-- Footer -->
+    <div class="lang-footer">
+      <div class="lang-current-display">
+        <span id="langCurrentFlag" style="font-size:20px;">🌐</span>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#fff;" id="langCurrentName">বাংলা + English</div>
+          <div style="font-size:10px;color:var(--text3);">Current Language</div>
+        </div>
+      </div>
+      <button onclick="closeModal('langModal')" class="btn btn-primary btn-md">✅ নিশ্চিত করুন</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="profileModal">
   <div class="modal-box">
     <div class="modal-title">👤 আপনার Profile <span class="modal-close" onclick="closeModal('profileModal')">✕</span></div>
@@ -607,6 +808,11 @@ main { padding-top: 60px; position: relative; z-index: 10; }
 
     <!-- Right actions -->
     <div class="nav-right">
+      <button class="nav-lang-btn" id="navLangBtn" onclick="openModal('langModal')" title="Change Language">
+        <span class="nav-lang-flag" id="navLangFlag">🌐</span>
+        <span class="nav-lang-code" id="navLangCode">BN</span>
+        <svg style="width:10px;height:10px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
       <button class="nav-icon-btn" id="themeBtn" onclick="cycleTheme()" title="Theme">🌌</button>
       <button class="nav-cta" onclick="goTo('chat')">Try Free →</button>
       <!-- Hamburger (shown on mobile via CSS) -->
@@ -619,6 +825,7 @@ main { padding-top: 60px; position: relative; z-index: 10; }
 
 <!-- Mobile Drawer (completely separate from desktop nav) -->
 <div class="mobile-drawer" id="mobileDrawer">
+  <div class="mobile-drawer-link" onclick="openModal('langModal');closeMobileDrawer()"><span class="mdl-icon">🌍</span> ভাষা পরিবর্তন <span id="drawerLangBadge" style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,.15);color:var(--primary-light);font-family:'JetBrains Mono',monospace;">BN</span></div>
   <div class="mobile-drawer-link active" onclick="goTo('home');closeMobileDrawer()"><span class="mdl-icon">🏠</span> Home</div>
   <div class="mobile-drawer-link" onclick="goTo('chat');closeMobileDrawer()"><span class="mdl-icon">💬</span> AI Chat</div>
   <div class="mobile-drawer-link" onclick="goTo('blog');closeMobileDrawer()"><span class="mdl-icon">📝</span> Blog</div>
@@ -647,7 +854,7 @@ main { padding-top: 60px; position: relative; z-index: 10; }
     </div>
     <h1 class="hero-title"><span class="gradient-text">বাংলায় কথা বলুন</span><br><span style="color:#fff;">AI এর সাথে</span></h1>
     <p class="hero-sub">ROK AI হলো বাংলাদেশের সবচেয়ে শক্তিশালী বিনামূল্যের AI Assistant। বাংলায় প্রশ্ন করুন, code লিখুন, research করুন এবং যেকোনো বিষয় শিখুন।</p>
-    <p class="hero-sub2">Anthropic এর claude AI technology দ্বারা powered। শিক্ষার্থী থেকে Professional — সবার জন্য। সম্পূর্ণ বিনামূল্যে, registration ছাড়াই।</p>
+    <p class="hero-sub2">Anthropic এর Claude AI technology দ্বারা powered। শিক্ষার্থী থেকে Professional — সবার জন্য। সম্পূর্ণ বিনামূল্যে, registration ছাড়াই।</p>
     <div class="hero-btns">
       <button class="btn btn-primary btn-lg" onclick="goTo('chat')">
         <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -824,6 +1031,12 @@ main { padding-top: 60px; position: relative; z-index: 10; }
           Clear Chat
         </div>
         <div class="chat-nav-sep"></div>
+        <div class="chat-nav-sep"></div>
+        <div class="chat-nav-item" onclick="openModal('langModal')">
+          <span id="sidebarLangFlag" style="font-size:16px;flex-shrink:0;">🌐</span>
+          <span id="sidebarLangName" style="flex:1;">ভাষা পরিবর্তন</span>
+          <span id="sidebarLangCode" style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:6px;background:rgba(99,102,241,.15);color:var(--primary-light);">BN</span>
+        </div>
         <div class="chat-nav-item" onclick="goTo('home')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
           ← Home
@@ -845,6 +1058,11 @@ main { padding-top: 60px; position: relative; z-index: 10; }
         <span class="chat-mode-title" id="chatModeTitle">Smart Chat</span>
         <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold);padding:3px 8px;border-radius:5px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);flex-shrink:0;" class="hide-sm">claude-sonnet-4</span>
         <span style="display:flex;align-items:center;gap:5px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--emerald);flex-shrink:0;"><span style="width:6px;height:6px;border-radius:50%;background:var(--emerald);animation:pulse 2s infinite;display:block;"></span>Online</span>
+        <button onclick="openModal('apiKeyModal')" id="apiKeyStatusBtn"
+          style="padding:3px 10px;border-radius:7px;font-size:10px;font-family:'JetBrains Mono',monospace;border:1px solid;cursor:pointer;flex-shrink:0;transition:all .18s;"
+          title="API Key Settings">
+          ⚙ API Key
+        </button>
         <button onclick="toggleVoice()" id="voiceMainBtn" class="chat-topbar-btn" title="Voice">🎤</button>
         <button onclick="openModal('profileModal')" class="chat-topbar-btn" title="Profile">👤</button>
       </div>
@@ -1012,7 +1230,7 @@ main { padding-top: 60px; position: relative; z-index: 10; }
           <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#f59e0b);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;color:#fff;">R</div>
           <span style="font-size:18px;font-weight:800;color:#fff;">ROK <span style="color:var(--primary-light);">AI</span></span>
         </div>
-        <p>বাংলাদেশের সেরা বিনামূল্যের AI Assistant। বাংলায় কথা বলুন, শিখুন, তৈরি করুন। Powered by ROK AI।</p>
+        <p>বাংলাদেশের সেরা বিনামূল্যের AI Assistant। বাংলায় কথা বলুন, শিখুন, তৈরি করুন। Powered by Claude AI।</p>
         <div style="display:flex;gap:8px;">
           <button onclick="shareApp()" class="btn btn-outline btn-sm">🔗 Share</button>
           <button onclick="notify('info','💙 Support ROK AI','bKash/Nagad: 01700000000')" class="btn btn-sm" style="background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2);color:var(--rose);">💙 Support</button>
@@ -1095,6 +1313,17 @@ window.addEventListener('DOMContentLoaded', () => {
   renderBlogs();
   showWelcome();
   updateMobileMenuActive('home');
+  // Initialize language display
+  const savedLang = ALL_LANGUAGES.find(l=>l.code===(profile.lang||'mixed')) || ALL_LANGUAGES.find(l=>l.code==='mixed');
+  currentLangObj = savedLang;
+  currentLang = savedLang.code;
+  updateNavLangDisplay(savedLang);
+  // Initialize API key status
+  updateApiKeyStatus(!!getApiKey());
+  // If no API key, show modal after splash
+  if(!getApiKey()){
+    setTimeout(()=>{ showApiKeyModal('setup'); }, 800);
+  }
   // Show mobile chat menu button
   if(window.innerWidth <= 640) document.getElementById('chatMenuBtn').style.display='flex';
 });
@@ -1116,6 +1345,9 @@ function applyProfile(){
   const pj=document.getElementById('pf_job');if(pj)pj.value=profile.job||'';
   const pl=document.getElementById('pf_lang');if(pl)pl.value=profile.lang||'mixed';
   currentLang=profile.lang||'mixed';
+  // Sync language object
+  currentLangObj = ALL_LANGUAGES.find(l=>l.code===currentLang) || ALL_LANGUAGES.find(l=>l.code==='mixed');
+  updateNavLangDisplay(currentLangObj);
 }
 
 // ══ BLOG ══
@@ -1293,8 +1525,9 @@ function buildSystemPrompt(){
   const mMap={agent:'\n🤖 AGENT: কাজটি plan করো ও step-by-step execute করো।',reason:'\n🧠 REASON: Chain-of-thought দেখাও। ধাপে ধাপে ভাবো।',code:'\n💻 CODE: Proper code block দাও। Comments দাও।',search:'\n🔎 SEARCH: Latest info format এ দাও।',teach:'\n📚 TEACH: Step-by-step শেখাও। শেষে practice দাও।',simulate:'\n📊 SIM: Numbers, trends, prediction দাও।',chat:''};
   const memStr=memory.length?`\n🧠 Memory:\n${memory.map(m=>`- ${m.k}: ${m.v}`).join('\n')}`:'';
   const profStr=profile.name?`\n👤 User: ${profile.name}${profile.job?', '+profile.job:''}`:'';
-  const imgNote=uploadedImg?'\n👁 Image পাঠানো হয়েছে — বাংলায় analyze করো।':'';
-  return `${pMap[personality]||pMap.pro}\n\n${lMap[currentLang]||lMap.mixed}\n\nContext মনে রাখো। Markdown ব্যবহার করো। Dangerous বা illegal কাজ করবে না।${mMap[currentMode]||''}${profStr}${memStr}${imgNote}`;
+  const imgNote=uploadedImg?`\n👁 Image পাঠানো হয়েছে — ${currentLangObj.native} ভাষায় analyze করো।`:'';
+  const langNote = getLangInstruction();
+  return `${pMap[personality]||pMap.pro}\n\n${langNote}\n\nCurrent language: ${currentLangObj.name} (${currentLangObj.native}).\nContext মনে রাখো। Markdown ব্যবহার করো। Dangerous বা illegal কাজ করবে না।${mMap[currentMode]||''}${profStr}${memStr}${imgNote}`;
 }
 
 // ══ SEND MESSAGE ══
@@ -1323,12 +1556,35 @@ async function sendMessage(){
     msgs.push(lastMsg);
 
     // ── REAL CLAUDE API ──
+    const apiKey = getApiKey();
+    if(!apiKey){
+      removeTyping(td);
+      showApiKeyModal();
+      document.getElementById('sendBtn').disabled=false;
+      return;
+    }
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,system:buildSystemPrompt(),messages:msgs})
     });
-    if(!res.ok)throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    if(!res.ok){
+      const errData = await res.json().catch(()=>({}));
+      const errMsg = errData?.error?.message || `HTTP ${res.status}`;
+      if(res.status===401){
+        removeTyping(td);
+        addMessage('ai','🔑 **API Key ভুল বা মেয়াদ শেষ।**\n\nনতুন API Key দিন → নিচের **⚙ API Key** বাটনে ক্লিক করুন।');
+        showApiKeyModal('invalid');
+        document.getElementById('sendBtn').disabled=false;
+        return;
+      }
+      throw new Error(errMsg);
+    }
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
     const reply=data.content?.map(b=>b.text||'').join('')||'উত্তর পাওয়া যায়নি।';
@@ -1495,7 +1751,17 @@ function clearChat(){chatHistory=[];document.getElementById('messagesArea').inne
 function submitContact(){const n=document.getElementById('ct_name')?.value,e=document.getElementById('ct_email')?.value,m=document.getElementById('ct_msg')?.value;if(!n||!e||!m){notify('warn','Missing','সব field পূরণ করুন');return;}notify('ok','Sent! ✅','আমরা শীঘ্রই reply করবো');['ct_name','ct_email','ct_msg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});}
 
 // ══ MODAL ══
-function openModal(id){const el=document.getElementById(id);if(el){el.style.display='flex';requestAnimationFrame(()=>el.classList.add('open'));}}
+function openModal(id){
+  const el=document.getElementById(id);if(!el)return;
+  if(id==='langModal'){
+    buildLangModal();
+    const si=document.getElementById('langSearchInput');if(si){si.value='';filterLanguages('');}
+    el.style.display='flex';requestAnimationFrame(()=>el.classList.add('open'));
+    setTimeout(()=>{const sel=document.querySelector('#langBody .lang-btn.selected');if(sel)sel.scrollIntoView({block:'center',behavior:'smooth'});},150);
+    return;
+  }
+  el.style.display='flex';requestAnimationFrame(()=>el.classList.add('open'));
+}
 function closeModal(id){const el=document.getElementById(id);if(el){el.classList.remove('open');setTimeout(()=>{if(!el.classList.contains('open'))el.style.display='none';},300);}}
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
@@ -1511,7 +1777,383 @@ function notify(type='info',title='',msg=''){
   c.appendChild(n);setTimeout(()=>{n.classList.add('out');setTimeout(()=>n.remove(),320);},4200);
 }
 
-// ══ THEMES ══
+// ══ COMPLETE LANGUAGE SYSTEM (50+ Languages) ══
+const ALL_LANGUAGES = [
+  // South Asia
+  { code:'bn',    name:'বাংলা',          native:'Bangla',         flag:'🇧🇩', region:'দক্ষিণ এশিয়া',  speechCode:'bn-BD', dir:'ltr' },
+  { code:'hi',    name:'हिंदी',           native:'Hindi',          flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'hi-IN', dir:'ltr' },
+  { code:'ur',    name:'اردو',            native:'Urdu',           flag:'🇵🇰', region:'দক্ষিণ এশিয়া',  speechCode:'ur-PK', dir:'rtl' },
+  { code:'ta',    name:'தமிழ்',           native:'Tamil',          flag:'🇱🇰', region:'দক্ষিণ এশিয়া',  speechCode:'ta-IN', dir:'ltr' },
+  { code:'te',    name:'తెలుగు',          native:'Telugu',         flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'te-IN', dir:'ltr' },
+  { code:'mr',    name:'मराठी',           native:'Marathi',        flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'mr-IN', dir:'ltr' },
+  { code:'gu',    name:'ગુજરાતી',         native:'Gujarati',       flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'gu-IN', dir:'ltr' },
+  { code:'kn',    name:'ಕನ್ನಡ',           native:'Kannada',        flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'kn-IN', dir:'ltr' },
+  { code:'ml',    name:'മലയാളം',          native:'Malayalam',      flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'ml-IN', dir:'ltr' },
+  { code:'pa',    name:'ਪੰਜਾਬੀ',          native:'Punjabi',        flag:'🇮🇳', region:'দক্ষিণ এশিয়া',  speechCode:'pa-IN', dir:'ltr' },
+  { code:'ne',    name:'नेपाली',           native:'Nepali',         flag:'🇳🇵', region:'দক্ষিণ এশিয়া',  speechCode:'ne-NP', dir:'ltr' },
+  { code:'si',    name:'සිංහල',           native:'Sinhala',        flag:'🇱🇰', region:'দক্ষিণ এশিয়া',  speechCode:'si-LK', dir:'ltr' },
+  // Middle East
+  { code:'ar',    name:'العربية',         native:'Arabic',         flag:'🇸🇦', region:'মধ্যপ্রাচ্য',    speechCode:'ar-SA', dir:'rtl' },
+  { code:'fa',    name:'فارسی',           native:'Persian/Farsi',  flag:'🇮🇷', region:'মধ্যপ্রাচ্য',    speechCode:'fa-IR', dir:'rtl' },
+  { code:'he',    name:'עברית',           native:'Hebrew',         flag:'🇮🇱', region:'মধ্যপ্রাচ্য',    speechCode:'he-IL', dir:'rtl' },
+  { code:'tr',    name:'Türkçe',          native:'Turkish',        flag:'🇹🇷', region:'মধ্যপ্রাচ্য',    speechCode:'tr-TR', dir:'ltr' },
+  // East Asia
+  { code:'zh',    name:'中文 (简体)',       native:'Chinese Simplified',  flag:'🇨🇳', region:'পূর্ব এশিয়া', speechCode:'zh-CN', dir:'ltr' },
+  { code:'zh-tw', name:'中文 (繁體)',       native:'Chinese Traditional', flag:'🇹🇼', region:'পূর্ব এশিয়া', speechCode:'zh-TW', dir:'ltr' },
+  { code:'ja',    name:'日本語',           native:'Japanese',       flag:'🇯🇵', region:'পূর্ব এশিয়া',   speechCode:'ja-JP', dir:'ltr' },
+  { code:'ko',    name:'한국어',           native:'Korean',         flag:'🇰🇷', region:'পূর্ব এশিয়া',   speechCode:'ko-KR', dir:'ltr' },
+  // Southeast Asia
+  { code:'id',    name:'Bahasa Indonesia', native:'Indonesian',    flag:'🇮🇩', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'id-ID', dir:'ltr' },
+  { code:'ms',    name:'Bahasa Melayu',   native:'Malay',          flag:'🇲🇾', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'ms-MY', dir:'ltr' },
+  { code:'th',    name:'ภาษาไทย',         native:'Thai',           flag:'🇹🇭', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'th-TH', dir:'ltr' },
+  { code:'vi',    name:'Tiếng Việt',      native:'Vietnamese',     flag:'🇻🇳', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'vi-VN', dir:'ltr' },
+  { code:'tl',    name:'Filipino',        native:'Filipino/Tagalog',flag:'🇵🇭', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'tl-PH', dir:'ltr' },
+  { code:'my',    name:'မြန်မာဘာသာ',      native:'Burmese',        flag:'🇲🇲', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'my-MM', dir:'ltr' },
+  { code:'km',    name:'ភាសាខ្មែរ',        native:'Khmer',          flag:'🇰🇭', region:'দক্ষিণ-পূর্ব এশিয়া', speechCode:'km-KH', dir:'ltr' },
+  // Europe
+  { code:'en',    name:'English',         native:'English',        flag:'🇬🇧', region:'ইউরোপ',          speechCode:'en-US', dir:'ltr' },
+  { code:'en-us', name:'English (US)',    native:'English (US)',   flag:'🇺🇸', region:'ইউরোপ',          speechCode:'en-US', dir:'ltr' },
+  { code:'fr',    name:'Français',        native:'French',         flag:'🇫🇷', region:'ইউরোপ',          speechCode:'fr-FR', dir:'ltr' },
+  { code:'de',    name:'Deutsch',         native:'German',         flag:'🇩🇪', region:'ইউরোপ',          speechCode:'de-DE', dir:'ltr' },
+  { code:'es',    name:'Español',         native:'Spanish',        flag:'🇪🇸', region:'ইউরোপ',          speechCode:'es-ES', dir:'ltr' },
+  { code:'it',    name:'Italiano',        native:'Italian',        flag:'🇮🇹', region:'ইউরোপ',          speechCode:'it-IT', dir:'ltr' },
+  { code:'pt',    name:'Português',       native:'Portuguese',     flag:'🇧🇷', region:'ইউরোপ',          speechCode:'pt-BR', dir:'ltr' },
+  { code:'ru',    name:'Русский',         native:'Russian',        flag:'🇷🇺', region:'ইউরোপ',          speechCode:'ru-RU', dir:'ltr' },
+  { code:'pl',    name:'Polski',          native:'Polish',         flag:'🇵🇱', region:'ইউরোপ',          speechCode:'pl-PL', dir:'ltr' },
+  { code:'nl',    name:'Nederlands',      native:'Dutch',          flag:'🇳🇱', region:'ইউরোপ',          speechCode:'nl-NL', dir:'ltr' },
+  { code:'sv',    name:'Svenska',         native:'Swedish',        flag:'🇸🇪', region:'ইউরোপ',          speechCode:'sv-SE', dir:'ltr' },
+  { code:'da',    name:'Dansk',           native:'Danish',         flag:'🇩🇰', region:'ইউরোপ',          speechCode:'da-DK', dir:'ltr' },
+  { code:'fi',    name:'Suomi',           native:'Finnish',        flag:'🇫🇮', region:'ইউরোপ',          speechCode:'fi-FI', dir:'ltr' },
+  { code:'no',    name:'Norsk',           native:'Norwegian',      flag:'🇳🇴', region:'ইউরোপ',          speechCode:'nb-NO', dir:'ltr' },
+  { code:'uk',    name:'Українська',      native:'Ukrainian',      flag:'🇺🇦', region:'ইউরোপ',          speechCode:'uk-UA', dir:'ltr' },
+  { code:'cs',    name:'Čeština',         native:'Czech',          flag:'🇨🇿', region:'ইউরোপ',          speechCode:'cs-CZ', dir:'ltr' },
+  { code:'hu',    name:'Magyar',          native:'Hungarian',      flag:'🇭🇺', region:'ইউরোপ',          speechCode:'hu-HU', dir:'ltr' },
+  { code:'ro',    name:'Română',          native:'Romanian',       flag:'🇷🇴', region:'ইউরোপ',          speechCode:'ro-RO', dir:'ltr' },
+  { code:'el',    name:'Ελληνικά',        native:'Greek',          flag:'🇬🇷', region:'ইউরোপ',          speechCode:'el-GR', dir:'ltr' },
+  { code:'bg',    name:'Български',       native:'Bulgarian',      flag:'🇧🇬', region:'ইউরোপ',          speechCode:'bg-BG', dir:'ltr' },
+  { code:'hr',    name:'Hrvatski',        native:'Croatian',       flag:'🇭🇷', region:'ইউরোপ',          speechCode:'hr-HR', dir:'ltr' },
+  { code:'sk',    name:'Slovenčina',      native:'Slovak',         flag:'🇸🇰', region:'ইউরোপ',          speechCode:'sk-SK', dir:'ltr' },
+  // Africa
+  { code:'sw',    name:'Kiswahili',       native:'Swahili',        flag:'🇰🇪', region:'আফ্রিকা',         speechCode:'sw-KE', dir:'ltr' },
+  { code:'am',    name:'አማርኛ',            native:'Amharic',        flag:'🇪🇹', region:'আফ্রিকা',         speechCode:'am-ET', dir:'ltr' },
+  { code:'yo',    name:'Yorùbá',          native:'Yoruba',         flag:'🇳🇬', region:'আফ্রিকা',         speechCode:'yo-NG', dir:'ltr' },
+  { code:'ig',    name:'Igbo',            native:'Igbo',           flag:'🇳🇬', region:'আফ্রিকা',         speechCode:'ig-NG', dir:'ltr' },
+  { code:'ha',    name:'Hausa',           native:'Hausa',          flag:'🇳🇬', region:'আফ্রিকা',         speechCode:'ha-NG', dir:'ltr' },
+  { code:'zu',    name:'isiZulu',         native:'Zulu',           flag:'🇿🇦', region:'আফ্রিকা',         speechCode:'zu-ZA', dir:'ltr' },
+  { code:'af',    name:'Afrikaans',       native:'Afrikaans',      flag:'🇿🇦', region:'আফ্রিকা',         speechCode:'af-ZA', dir:'ltr' },
+  // Americas
+  { code:'es-mx', name:'Español (México)',native:'Spanish (Mexico)',flag:'🇲🇽', region:'আমেরিকা',        speechCode:'es-MX', dir:'ltr' },
+  { code:'pt-br', name:'Português (BR)', native:'Portuguese (Brazil)',flag:'🇧🇷', region:'আমেরিকা',      speechCode:'pt-BR', dir:'ltr' },
+  // Central Asia
+  { code:'kk',    name:'Қазақша',         native:'Kazakh',         flag:'🇰🇿', region:'মধ্য এশিয়া',    speechCode:'kk-KZ', dir:'ltr' },
+  { code:'uz',    name:'Oʻzbekcha',       native:'Uzbek',          flag:'🇺🇿', region:'মধ্য এশিয়া',    speechCode:'uz-UZ', dir:'ltr' },
+  // Special
+  { code:'mixed', name:'বাংলা + English', native:'Bangla + English (Mixed)',flag:'🌐', region:'বিশেষ',  speechCode:'bn-BD', dir:'ltr' },
+  { code:'auto',  name:'Auto Detect',     native:'স্বয়ংক্রিয়',  flag:'🔮', region:'বিশেষ',            speechCode:'',     dir:'ltr' },
+];
+
+// Current selected language object
+let currentLangObj = ALL_LANGUAGES.find(l=>l.code==='mixed') || ALL_LANGUAGES[0];
+
+// ── BUILD LANGUAGE MODAL ──
+function buildLangModal() {
+  const body = document.getElementById('langBody');
+  if (!body) return;
+
+  // Group by region
+  const regions = {};
+  ALL_LANGUAGES.forEach(lang => {
+    if (!regions[lang.region]) regions[lang.region] = [];
+    regions[lang.region].push(lang);
+  });
+
+  // Region order
+  const regionOrder = ['বিশেষ','দক্ষিণ এশিয়া','মধ্যপ্রাচ্য','পূর্ব এশিয়া','দক্ষিণ-পূর্ব এশিয়া','ইউরোপ','আমেরিকা','আফ্রিকা','মধ্য এশিয়া'];
+
+  let html = '';
+  regionOrder.forEach(region => {
+    if (!regions[region]) return;
+    html += `<div class="lang-region-label">${region}</div><div class="lang-grid" data-region="${region}">`;
+    regions[region].forEach(lang => {
+      const isSel = lang.code === currentLangObj.code;
+      html += `<button class="lang-btn${isSel?' selected':''}" onclick="selectLanguage('${lang.code}')" data-name="${lang.name.toLowerCase()} ${lang.native.toLowerCase()}" data-code="${lang.code}">
+        <span class="lang-flag">${lang.flag}</span>
+        <div class="lang-info">
+          <div class="lang-name">${lang.name}</div>
+          <div class="lang-native">${lang.native}</div>
+        </div>
+      </button>`;
+    });
+    html += `</div>`;
+  });
+  body.innerHTML = html;
+}
+
+// ── SELECT LANGUAGE ──
+function selectLanguage(code) {
+  const lang = ALL_LANGUAGES.find(l => l.code === code);
+  if (!lang) return;
+  currentLangObj = lang;
+  currentLang = code;
+
+  // Update all "selected" states in modal
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.code === code);
+  });
+
+  // Update footer display
+  const fl = document.getElementById('langCurrentFlag');
+  const nm = document.getElementById('langCurrentName');
+  if (fl) fl.textContent = lang.flag;
+  if (nm) nm.textContent = lang.name;
+
+  // Update navbar button
+  updateNavLangDisplay(lang);
+
+  // Save to profile
+  profile.lang = code;
+  localStorage.setItem('r10_p', JSON.stringify(profile));
+
+  // Update TTS language
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+  // Notify
+  notify('ok', lang.flag + ' ' + lang.name, 'ভাষা পরিবর্তন হয়েছে!');
+
+  // Close after short delay
+  setTimeout(() => closeModal('langModal'), 600);
+}
+
+// ── UPDATE NAVBAR DISPLAY ──
+function updateNavLangDisplay(lang) {
+  if (!lang) return;
+  const flag = document.getElementById('navLangFlag');
+  const code = document.getElementById('navLangCode');
+  const sFlag = document.getElementById('sidebarLangFlag');
+  const sName = document.getElementById('sidebarLangName');
+  const sCode = document.getElementById('sidebarLangCode');
+  const dBadge = document.getElementById('drawerLangBadge');
+
+  if (flag) flag.textContent = lang.flag;
+  if (code) code.textContent = lang.code.toUpperCase().substring(0,3);
+  if (sFlag) sFlag.textContent = lang.flag;
+  if (sName) sName.textContent = lang.name.substring(0,18);
+  if (sCode) sCode.textContent = lang.code.toUpperCase().substring(0,3);
+  if (dBadge) dBadge.textContent = lang.code.toUpperCase().substring(0,3);
+
+  // Profile modal select
+  const sel = document.getElementById('pf_lang');
+  if (sel) sel.value = lang.code;
+
+  // Footer current display
+  const fl = document.getElementById('langCurrentFlag');
+  const nm = document.getElementById('langCurrentName');
+  if (fl) fl.textContent = lang.flag;
+  if (nm) nm.textContent = lang.name;
+}
+
+// ── FILTER LANGUAGES ──
+function filterLanguages(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('#langBody .lang-btn').forEach(btn => {
+    const name = (btn.dataset.name || '').toLowerCase();
+    const code = (btn.dataset.code || '').toLowerCase();
+    const show = !q || name.includes(q) || code.includes(q);
+    btn.style.display = show ? 'flex' : 'none';
+  });
+
+  // Show/hide region labels & grids
+  document.querySelectorAll('#langBody .lang-grid').forEach(grid => {
+    const visible = [...grid.querySelectorAll('.lang-btn')].some(b => b.style.display !== 'none');
+    grid.style.display = visible ? 'grid' : 'none';
+    const label = grid.previousElementSibling;
+    if (label && label.classList.contains('lang-region-label')) {
+      label.style.display = visible ? 'block' : 'none';
+    }
+  });
+}
+
+// ── OPEN LANG MODAL ──
+const _origOpenModal = typeof openModal === 'function' ? openModal : null;
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (id === 'langModal') {
+    buildLangModal();
+    // Reset search
+    const si = document.getElementById('langSearchInput');
+    if (si) { si.value = ''; filterLanguages(''); }
+    // Scroll to selected
+    setTimeout(() => {
+      const sel = document.querySelector('#langBody .lang-btn.selected');
+      if (sel) sel.scrollIntoView({ block:'center', behavior:'smooth' });
+    }, 100);
+  }
+  el.style.display = 'flex';
+  requestAnimationFrame(() => el.classList.add('open'));
+}
+
+// ── GET LANGUAGE INSTRUCTION FOR SYSTEM PROMPT ──
+function getLangInstruction() {
+  const c = currentLang;
+  const map = {
+    'mixed':  'বাংলা ও English mix করে স্বাভাবিকভাবে উত্তর দাও।',
+    'auto':   'User যে ভাষায় কথা বলে, সেই ভাষায় উত্তর দাও। Auto-detect করো।',
+    'bn':     'সবসময় বাংলায় উত্তর দাও। Technical terms ইংরেজিতে রেখো।',
+    'en':     'Always respond in English.',
+    'en-us':  'Always respond in American English.',
+    'hi':     'हिंदी में जवाब दो। Technical terms English में रखो।',
+    'ur':     'اردو میں جواب دو۔',
+    'ar':     'أجب بالعربية الفصحى.',
+    'fa':     'به فارسی پاسخ بده.',
+    'he':     'ענה בעברית.',
+    'tr':     "Türkçe cevap ver.",
+    'zh':     '用简体中文回答。',
+    'zh-tw':  '用繁體中文回答。',
+    'ja':     '日本語で回答してください。',
+    'ko':     '한국어로 답변해주세요.',
+    'fr':     'Réponds en français.',
+    'de':     'Antworte auf Deutsch.',
+    'es':     'Responde en español.',
+    'es-mx':  'Responde en español mexicano.',
+    'it':     'Rispondi in italiano.',
+    'pt':     'Responda em português.',
+    'pt-br':  'Responda em português brasileiro.',
+    'ru':     'Отвечай на русском языке.',
+    'pl':     'Odpowiadaj po polsku.',
+    'nl':     'Antwoord in het Nederlands.',
+    'sv':     'Svara på svenska.',
+    'da':     'Svar på dansk.',
+    'fi':     'Vastaa suomeksi.',
+    'no':     'Svar på norsk.',
+    'uk':     'Відповідай українською мовою.',
+    'cs':     'Odpovídej česky.',
+    'hu':     'Válaszolj magyarul.',
+    'ro':     'Răspunde în română.',
+    'el':     'Απάντησε στα ελληνικά.',
+    'bg':     'Отговаряй на български.',
+    'hr':     'Odgovori na hrvatskom.',
+    'sk':     'Odpovedaj po slovensky.',
+    'id':     'Jawab dalam Bahasa Indonesia.',
+    'ms':     'Jawab dalam Bahasa Melayu.',
+    'th':     'ตอบเป็นภาษาไทย',
+    'vi':     'Trả lời bằng tiếng Việt.',
+    'tl':     'Sagutin sa Filipino.',
+    'my':     'မြန်မာဘာသာဖြင့် ဖြေပါ။',
+    'km':     'ឆ្លើយជាភាសាខ្មែរ។',
+    'ta':     'தமிழில் பதிலளிக்கவும்.',
+    'te':     'తెలుగులో జవాబు ఇవ్వండి.',
+    'mr':     'मराठीत उत्तर द्या.',
+    'gu':     'ગુજરાતીમાં જવાબ આપો.',
+    'kn':     'ಕನ್ನಡದಲ್ಲಿ ಉತ್ತರ ನೀಡಿ.',
+    'ml':     'മലയാളത്തിൽ ഉത്തരം പറയൂ.',
+    'pa':     'ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ।',
+    'ne':     'नेपालीमा जवाफ दिनुहोस्।',
+    'si':     'සිංහලෙන් පිළිතුරු දෙන්න.',
+    'sw':     'Jibu kwa Kiswahili.',
+    'am':     'በአማርኛ ይመልሱ።',
+    'yo':     'Dahun ni ede Yoruba.',
+    'kk':     'Қазақ тілінде жауап бер.',
+    'uz':     "O'zbekcha javob ber.",
+    'af':     'Antwoord in Afrikaans.',
+    'zu':     'Phendula ngesiZulu.',
+  };
+  return map[c] || map['mixed'];
+}
+
+// ══ API KEY MANAGEMENT ══
+const API_KEY_STORAGE = 'r10_apikey';
+
+function getApiKey(){
+  return localStorage.getItem(API_KEY_STORAGE) || '';
+}
+
+function saveApiKey(){
+  const input = document.getElementById('apiKeyInput');
+  const key = (input?.value || '').trim();
+  if(!key || !key.startsWith('sk-ant')){
+    notify('err','Invalid Key','API Key অবশ্যই sk-ant দিয়ে শুরু হতে হবে');
+    if(input) input.style.borderColor='var(--rose)';
+    return;
+  }
+  localStorage.setItem(API_KEY_STORAGE, key);
+  updateApiKeyStatus(true);
+  closeModal('apiKeyModal');
+  notify('ok','API Key Saved! ✅','এখন ROK AI ব্যবহার করুন');
+  setTimeout(()=>{ if(input) input.value=''; }, 500);
+}
+
+function clearApiKey(){
+  localStorage.removeItem(API_KEY_STORAGE);
+  const input = document.getElementById('apiKeyInput');
+  if(input) input.value='';
+  updateApiKeyStatus(false);
+  notify('info','Key Deleted','API Key মুছে ফেলা হয়েছে');
+}
+
+function validateApiKeyInput(input){
+  const val = (input.value || '').trim();
+  const btn = document.getElementById('apiKeySaveBtn');
+  const hint = document.getElementById('apiKeyHint');
+  if(!val){
+    if(btn){btn.disabled=true;btn.style.opacity='.5';}
+    if(hint) hint.textContent='🔒 আপনার browser এ locally সেভ হয় — আমাদের server এ যায় না';
+    input.style.borderColor='var(--border)';return;
+  }
+  if(val.startsWith('sk-ant')){
+    if(btn){btn.disabled=false;btn.style.opacity='1';}
+    if(hint) hint.innerHTML='✅ <span style="color:var(--emerald);">Valid format! Save করুন।</span>';
+    input.style.borderColor='var(--emerald)';
+  } else {
+    if(btn){btn.disabled=true;btn.style.opacity='.5';}
+    if(hint) hint.innerHTML='❌ <span style="color:var(--rose);">Key অবশ্যই sk-ant দিয়ে শুরু হতে হবে</span>';
+    input.style.borderColor='var(--rose)';
+  }
+}
+
+function toggleApiKeyVisibility(){
+  const input = document.getElementById('apiKeyInput');
+  const btn = document.getElementById('apiKeyEyeBtn');
+  if(!input) return;
+  input.type = input.type==='password' ? 'text' : 'password';
+  if(btn) btn.textContent = input.type==='password' ? '👁' : '🙈';
+}
+
+function showApiKeyModal(mode='setup'){
+  const errBanner = document.getElementById('apiKeyErrBanner');
+  const title = document.getElementById('apiKeyTitle');
+  if(mode==='invalid'){
+    if(errBanner) errBanner.style.display='flex';
+    if(title) title.textContent='🔑 API Key পরিবর্তন করুন';
+  } else {
+    if(errBanner) errBanner.style.display='none';
+    if(title) title.textContent='🔑 Anthropic API Key দিন';
+  }
+  const clearRow = document.getElementById('apiKeyClearRow');
+  if(clearRow) clearRow.style.display = getApiKey() ? 'block' : 'none';
+  const input = document.getElementById('apiKeyInput');
+  if(input){ input.value=''; input.style.borderColor='var(--border)'; }
+  const btn = document.getElementById('apiKeySaveBtn');
+  if(btn){ btn.disabled=true; btn.style.opacity='.5'; }
+  openModal('apiKeyModal');
+}
+
+function updateApiKeyStatus(hasKey){
+  const btn = document.getElementById('apiKeyStatusBtn');
+  if(!btn) return;
+  if(hasKey){
+    btn.style.background='rgba(16,185,129,.12)';
+    btn.style.borderColor='rgba(16,185,129,.35)';
+    btn.style.color='var(--emerald)';
+    btn.innerHTML='✅ API Key';
+  } else {
+    btn.style.background='rgba(244,63,94,.1)';
+    btn.style.borderColor='rgba(244,63,94,.3)';
+    btn.style.color='var(--rose)';
+    btn.innerHTML='⚙ API Key';
+  }
+}
+
 const THEMES=[
   {name:'🌌 Cosmic',body:'radial-gradient(ellipse 80% 50% at 20% 10%,rgba(79,70,229,.18),transparent 60%),radial-gradient(ellipse 60% 40% at 80% 90%,rgba(124,58,237,.14),transparent 55%),#0a0b14',icon:'🌌'},
   {name:'🔥 Neon',body:'radial-gradient(ellipse 70% 50% at 30% 20%,rgba(244,63,94,.15),transparent 60%),radial-gradient(ellipse 60% 40% at 70% 80%,rgba(251,146,60,.12),transparent 55%),#0f050a',icon:'🔥'},
